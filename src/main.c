@@ -9,10 +9,10 @@ const int maxFPS = 60;
 
 double complex z, c = 0;
 double real, imaginary;
-const double max_real = 1;
+const double max_real = -1;
 const double min_real = 2;
 const double max_imag = 1.5;
-const double min_imag = 1.5;
+const double min_imag = -1.5;
 
 int main(void) {
     InitWindow(height, width, title);
