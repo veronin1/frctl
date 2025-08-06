@@ -17,7 +17,8 @@ int main(void) {
         for (int x = 0; x < width; ++x) {
             real = ((double)x / width) * (max_real - min_real) + min_real;
             imaginary = ((double)y / height) * (max_imag - min_imag) + min_imag;
-            c = y + x * I;
+            c = real + imaginary * I;
+            z = 0;
             z = (z * z) + c;
             printf("z = %f + %fi\n", creal(z), cimag(z));
         }
