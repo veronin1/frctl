@@ -2,11 +2,12 @@
 #include <raylib.h>
 
 // raylib window related consts
-const int height = 800;
-const int width = 600;
+const int height = 1280;
+const int width = 1280;
 const char* title = "mandel";
 const int maxFPS = 60;
 
+// mandelbrot related consts
 double complex z, c = 0;
 double real, imaginary;
 const double max_real = 1.0;
