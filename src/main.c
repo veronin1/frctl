@@ -1,6 +1,5 @@
 #include <complex.h>
 #include <raylib.h>
-#include <stdio.h>
 
 // raylib window related consts
 const int height = 800;
@@ -19,8 +18,6 @@ int main(void) {
     InitWindow(height, width, title);
     SetTargetFPS(maxFPS);
     int currentMonitor = GetCurrentMonitor();
-    SetWindowSize(GetMonitorWidth(currentMonitor),
-                  GetMonitorHeight(currentMonitor));
 
     while (!WindowShouldClose()) {
         int newMonitor = GetCurrentMonitor();
@@ -38,13 +35,21 @@ int main(void) {
 
         for (int y = 0; y < height; ++y) {
             for (int x = 0; x < width; ++x) {
+                Color color = RED;
                 real = ((double)x / width) * (max_real - min_real) + min_real;
                 imaginary =
                     ((double)y / height) * (max_imag - min_imag) + min_imag;
                 c = real + imaginary * I;
                 z = 0;
                 z = (z * z) + c;
-                Color color = RED;
+                for (int i = 0; i < 1000; ++i) {
+                    z = (z * z) + c;
+                    if (cabs(z) > 2) {
+                        color = BLUE;
+                        break;
+                    }
+                }
+
                 DrawPixel(x, y, color);
             }
         }
