@@ -19,27 +19,39 @@ int main(void) {
     InitWindow(height, width, title);
     SetTargetFPS(maxFPS);
     int currentMonitor = GetCurrentMonitor();
+    SetWindowSize(GetMonitorWidth(currentMonitor),
+                  GetMonitorHeight(currentMonitor));
 
     while (!WindowShouldClose()) {
         int newMonitor = GetCurrentMonitor();
 
         if (currentMonitor != newMonitor) {
-            SetWindowMaxSize(GetMonitorWidth(currentMonitor),
-                             GetMonitorHeight(currentMonitor));
+            currentMonitor = newMonitor;
+
+            SetWindowSize(GetMonitorWidth(currentMonitor),
+                          GetMonitorHeight(currentMonitor));
 
             SetTargetFPS(GetMonitorRefreshRate(currentMonitor));
         }
-    }
-    CloseWindow();
 
-    for (int y = 0; y < height; ++y) {
-        for (int x = 0; x < width; ++x) {
-            real = ((double)x / width) * (max_real - min_real) + min_real;
-            imaginary = ((double)y / height) * (max_imag - min_imag) + min_imag;
-            c = real + imaginary * I;
-            z = 0;
-            z = (z * z) + c;
-            printf("z = %f + %fi\n", creal(z), cimag(z));
+        BeginDrawing();
+
+        for (int y = 0; y < height; ++y) {
+            for (int x = 0; x < width; ++x) {
+                real = ((double)x / width) * (max_real - min_real) + min_real;
+                imaginary =
+                    ((double)y / height) * (max_imag - min_imag) + min_imag;
+                c = real + imaginary * I;
+                z = 0;
+                z = (z * z) + c;
+                Color color = RED;
+                DrawPixel(x, y, color);
+            }
         }
+
+        EndDrawing();
     }
+
+    CloseWindow();
+    return 0;
 }
