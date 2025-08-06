@@ -18,12 +18,17 @@ const double min_imag = 1.5;
 int main(void) {
     InitWindow(height, width, title);
     SetTargetFPS(maxFPS);
+    int currentMonitor = GetCurrentMonitor();
 
     while (!WindowShouldClose()) {
-        int monitorWidth = GetMonitorWidth(GetCurrentMonitor());
-        int monitorHeight =
-            GetMonitorHeight(GetMonitorHeight(GetCurrentMonitor()));
-        int monitorFPS = GetMonitorRefreshRate(GetCurrentMonitor());
+        int newMonitor = GetCurrentMonitor();
+
+        if (currentMonitor != newMonitor) {
+            SetWindowMaxSize(GetMonitorWidth(currentMonitor),
+                             GetMonitorHeight(currentMonitor));
+
+            SetTargetFPS(GetMonitorRefreshRate(currentMonitor));
+        }
     }
     CloseWindow();
 
