@@ -11,4 +11,9 @@ typedef struct {
 void RenderMandelbrot(const RenderConfig* cfg) {
     InitWindow(cfg->width, cfg->height, cfg->title);
     SetTargetFPS(cfg->maxFPS);
+
+    while (!WindowShouldClose()) {
+        //
+    }
+    CloseWindow();
 }
