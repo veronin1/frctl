@@ -1,5 +1,6 @@
 #include <complex.h>
 #include <raylib.h>
+#include <stdlib.h>
 
 // raylib window related consts
 const int height = 1280;
@@ -8,7 +9,7 @@ const char* title = "mandel";
 const int maxFPS = 60;
 
 // mandelbrot related consts
-double complex z, c = 0;
+double complex c;
 double real, imaginary;
 const double max_real = 1.0;
 const double min_real = -2.0;
@@ -41,14 +42,18 @@ int main(void) {
                 imaginary =
                     ((double)y / height) * (max_imag - min_imag) + min_imag;
                 c = real + imaginary * I;
-                z = 0;
+                double complex z = 0;
 
-                for (int i = 0; i < 1000; ++i) {
+                size_t counter = 0;
+                while (cabs(z) >= 2) {
                     z = (z * z) + c;
-                    if (cabs(z) > 2) {
-                        color = BLUE;
+
+                    color = BLUE;
+
+                    if (counter == 1000) {
                         break;
                     }
+                    counter++;
                 }
 
                 DrawPixel(x, y, color);
