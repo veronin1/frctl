@@ -9,11 +9,11 @@ const char* title = "mandel";
 const int maxFPS = 60;
 
 // mandelbrot related consts
-double real, imaginary;
 const double max_real = 1.0;
 const double min_real = -2.0;
 const double max_imag = 1.5;
 const double min_imag = -1.5;
+const size_t maxIter = 1000;
 
 int main(void) {
     InitWindow(width, height, title);
@@ -45,8 +45,7 @@ int main(void) {
                 double complex z = 0;
 
                 size_t counter = 0;
-                size_t maxIter = 1000;
-                while (cabs(z) >= 2 && counter < maxIter) {
+                while (cabs(z) <= 2 && counter < maxIter) {
                     z = z * z + c;
                     counter++;
                 }
