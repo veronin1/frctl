@@ -3,13 +3,12 @@
 #include <stdlib.h>
 
 // raylib window related consts
-const int height = 1280;
-const int width = 1280;
+const int height = 800;
+const int width = 800;
 const char* title = "mandel";
 const int maxFPS = 60;
 
 // mandelbrot related consts
-double complex c;
 double real, imaginary;
 const double max_real = 1.0;
 const double min_real = -2.0;
@@ -37,23 +36,26 @@ int main(void) {
 
         for (int y = 0; y < height; ++y) {
             for (int x = 0; x < width; ++x) {
-                Color color = RED;
-                real = ((double)x / width) * (max_real - min_real) + min_real;
-                imaginary =
+
+                double cx =
+                    ((double)x / width) * (max_real - min_real) + min_real;
+                double cy =
                     ((double)y / height) * (max_imag - min_imag) + min_imag;
-                c = real + imaginary * I;
+                double complex c = cx + cy * I;
                 double complex z = 0;
 
                 size_t counter = 0;
-                while (cabs(z) >= 2) {
-                    z = (z * z) + c;
-
-                    color = BLUE;
-
-                    if (counter == 1000) {
-                        break;
-                    }
+                size_t maxIter = 1000;
+                while (cabs(z) >= 2 && counter < maxIter) {
+                    z = z * z + c;
                     counter++;
+                }
+
+                Color color;
+                if (counter == maxIter) {
+                    color = BLACK;
+                } else {
+                    color = RED;
                 }
 
                 DrawPixel(x, y, color);
