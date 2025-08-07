@@ -54,7 +54,14 @@ int main(void) {
                 if (counter == maxIter) {
                     color = BLACK;
                 } else {
-                    color = RED;
+                    if (counter < 250)
+                        color = RED;
+                    if (counter > 250 && counter < 500)
+                        color = BLUE;
+                    if (counter > 500 && counter < 750)
+                        color = YELLOW;
+                    if (counter > 750 && counter < 1000)
+                        color = GREEN;
                 }
 
                 DrawPixel(x, y, color);
