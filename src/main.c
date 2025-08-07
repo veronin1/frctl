@@ -15,7 +15,18 @@ const double max_imag = 1.5;
 const double min_imag = -1.5;
 const size_t maxIter = 1000;
 
+void RenderMandelbrot(const int height, const int width, const char* title,
+                      const int maxFPS, const double max_real,
+                      const double min_real, const double max_imag,
+                      const double min_imag) {
+    InitWindow(width, height, title);
+    SetTargetFPS(maxFPS);
+}
+
 int main(void) {
+    RenderMandelbrot(width, width, title, maxFPS, max_real, min_real, max_imag,
+                     min_imag);
+
     InitWindow(width, height, title);
     SetTargetFPS(maxFPS);
     int currentMonitor = GetCurrentMonitor();
@@ -52,7 +63,8 @@ int main(void) {
 
                 Color color;
                 if (counter == maxIter) {
-                    color = BLACK;
+                    // BLACK
+                    color = (Color){0, 0, 0, 255};
                 } else {
                     if (counter < 250)
                         color = RED;
