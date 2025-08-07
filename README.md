@@ -10,6 +10,11 @@
 
 # Compilation & Running
 
+> **Requirements:**
+- C compiler (gcc, clang)
+- UNIX System (Linux, MacOS, WSL)
+- raylib
+
 ```sh
 make
 ./mandel
