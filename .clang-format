@@ -1,0 +1,16 @@
+BasedOnStyle: Google
+Language: C
+IndentWidth: 2
+TabWidth: 8
+UseTab: Never
+DerivePointerAlignment: false
+PointerAlignment: Left
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: InlineOnly
+BreakBeforeBraces: Attach
+ColumnLimit: 80
+SortIncludes: true
+IncludeBlocks: Preserve
+SpacesBeforeTrailingComments: 1
+SpaceBeforeParens: ControlStatements
