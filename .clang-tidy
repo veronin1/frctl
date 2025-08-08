@@ -1,0 +1,26 @@
+---
+Checks: >
+  clang-analyzer-*,
+  bugprone-*,
+  readability-*,
+  -readability-avoid-const-params-in-decls,
+  -readability-function-cognitive-complexity,
+  -readability-uppercase-literal-suffix,
+  -bugprone-branch-clone,
+  -bugprone-easily-swappable-parameters,
+  -cppcoreguidelines-avoid-non-const-global-variables,
+  -cppcoreguidelines-pro-*,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -clang-analyzer-security.insecureAPI.*,
+  -altera-*
+
+WarningsAsErrors: ''
+
+HeaderFilterRegex: ''
+
+CheckOptions:
+  - key: readability-magic-numbers.IgnoredFloatingPointValues
+    value: '0.0;1.0;100.0;'
+  - key: readability-magic-numbers.IgnoredIntegerValues
+    value: '0;1;2;3;4;5;6;7;8;9;'
+...
