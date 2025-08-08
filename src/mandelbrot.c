@@ -1,12 +1,22 @@
 #include "mandelbrot.h"
 #include <complex.h>
 #include <stdlib.h>
+#include "fractal.h"
 
-int mandelbrot(Fractal* mandelbrot, size_t width, size_t height,
-               uint16_t* iterBuffer) {
+// Mandelbrot set: z_{n+1} = z_n^2 + c
+int mandelbrot(const Fractal* mandelbrot, const size_t width,
+               const size_t height, uint16_t* iterBuffer) {
+  if (!mandelbrot || !iterBuffer) {
+    return MANDELBROT_FAILURE;
+  }
+
+  if (mandelbrot->type != FRACTAL_MANDELBROT) {
+    return MANDELBROT_FAILURE;
+  }
+
   for (size_t y = 0; y < height; ++y) {
     for (size_t x = 0; x < width; ++x) {
-      // z_new = z_old * z_old + c
+      // map pixel coordinate (x,y) to complex plane coordinate (cx, cy)
       double cx = ((double)x / (double)width) *
                       (mandelbrot->maxReal - mandelbrot->minReal) +
                   mandelbrot->minReal;
