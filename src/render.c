@@ -1,19 +1,14 @@
-#include "mandelbrot.h"
+#include "render.h"
 #include <raylib.h>
-typedef struct {
-    int width, height;
-    char* title;
-    int maxFPS;
-    double minReal, maxReal;
-    double minImag, maxImag;
-} RenderConfig;
 
-void RenderMandelbrot(const RenderConfig* cfg) {
-    InitWindow(cfg->width, cfg->height, cfg->title);
-    SetTargetFPS(cfg->maxFPS);
+#include "mandelbrot.h"
 
-    while (!WindowShouldClose()) {
-        //
-    }
-    CloseWindow();
+void RenderMandelbrot(const RenderConfig* cfg, const Fractal* fractal) {
+  InitWindow((int)cfg->width, (int)cfg->height, cfg->title);
+  SetTargetFPS(cfg->maxFPS);
+
+  while (!WindowShouldClose()) {
+    //
+  }
+  CloseWindow();
 }
