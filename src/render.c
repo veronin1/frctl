@@ -1,5 +1,5 @@
+#include "mandelbrot.h"
 #include <raylib.h>
-
 typedef struct {
     int width, height;
     char* title;

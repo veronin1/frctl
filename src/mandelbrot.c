@@ -1,18 +1,11 @@
+#include "mandelbrot.h"
 #include <complex.h>
 #include <stdlib.h>
 
-#define MANDELBROT_SUCCESS 0
-#define MANDELBROT_FAILURE -1
+const int height = 800;
+const int width = 800;
 
-typedef struct {
-    double minReal, maxReal;
-    double minImag, maxImag;
-    size_t maxIter;
-} Fractal;
-
-const int height, width = 800;
-
-void mandelbrot(Fractal* mandelbrot) {
+int mandelbrot(Fractal* mandelbrot) {
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             // z_new = z_old * z_old + c
@@ -33,4 +26,5 @@ void mandelbrot(Fractal* mandelbrot) {
             }
         }
     }
+    return MANDELBROT_SUCCESS;
 }
