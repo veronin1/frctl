@@ -9,4 +9,4 @@ typedef struct {
     size_t maxIter;
 } Fractal;
 
-#endif // FRACTAL.H
+#endif // FRACTAL_

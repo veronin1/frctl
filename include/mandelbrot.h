@@ -6,6 +6,6 @@
 #define MANDELBROT_SUCCESS 0
 #define MANDELBROT_FAILURE -1
 
-int mandelbrot(Fractal* mandelbrot);
+int mandelbrot(Fractal* mandelbrot, size_t width, size_t height);
 
-#endif // MANDELBROT.H
+#endif // MANDELBROT_H
