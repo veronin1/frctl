@@ -20,6 +20,6 @@ typedef struct {
 
 
 // Validate inputs relevant to fractal
-FractalStatus validate_fractal_inputs(Fractal* fractal, size_t width, size_t height, const uint16_t* iterBuffer);
+FractalStatus validate_fractal_inputs(const Fractal* fractal, size_t width, size_t height, const uint16_t* iterBuffer);
 
 #endif // FRACTAL.H
