@@ -6,10 +6,6 @@
 #include <complex.h>
 #include <stdint.h>
 
-// example coords:
-// x,y
-// 0.7111476192
-// 0.2484631949
 int julia(const Fractal* fractal, const size_t width, const size_t height,
           uint16_t* iterBuffer) {
   if (!fractal || !height || !width) {
@@ -36,7 +32,7 @@ uint16_t julia_iter(const Fractal* fractal, size_t x, size_t y, size_t width,
   double zy =
       ((double)y / (double)height) * (fractal->maxImag - fractal->minImag) +
       fractal->minImag;
-  double complex c = CMPLX(0.7111476192, 0.2484631949);
+  double complex c = CMPLX(-0.7, 0.27015);
   double complex z = CMPLX(zx, zy);
 
   size_t counter = 0;
