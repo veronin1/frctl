@@ -9,7 +9,7 @@ int main(void) {
     return 1;
   }
 
-  fractal->type = FRACTAL_MANDELBROT;
+  fractal->type = FRACTAL_JULIA;
   fractal->minReal = -2.0;
   fractal->maxReal = 1.0;
   fractal->minImag = -1.5;
@@ -26,7 +26,7 @@ int main(void) {
   cfg->title = "frctl";
   cfg->maxFPS = 60;
 
-  RenderMandelbrot(cfg, fractal);
+  RenderFractal(cfg, fractal);
 
   free(fractal);
   free(cfg);

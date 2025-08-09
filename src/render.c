@@ -1,12 +1,13 @@
 #include "render.h"
 #include "fractal.h"
+#include "julia.h"
 #include "mandelbrot.h"
 
 #include <raylib.h>
 #include <stdint.h>
 #include <stdlib.h>
 
-void RenderMandelbrot(const RenderConfig* cfg, const Fractal* fractal) {
+void RenderFractal(const RenderConfig* cfg, const Fractal* fractal) {
   if (!cfg || !fractal) {
     return;
   }
@@ -21,6 +22,11 @@ void RenderMandelbrot(const RenderConfig* cfg, const Fractal* fractal) {
 
   if (fractal->type == FRACTAL_MANDELBROT) {
     mandelbrot(fractal, cfg->width, cfg->height, iterBuffer);
+  } else if (fractal->type == FRACTAL_JULIA) {
+    julia(fractal, cfg->width, cfg->height, iterBuffer);
+  } else {
+    free(iterBuffer);
+    return;
   }
 
   while (!WindowShouldClose()) {

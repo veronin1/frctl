@@ -12,6 +12,6 @@ typedef struct {
     int maxFPS;
 } RenderConfig;
 
-void RenderMandelbrot(const RenderConfig* cfg, const Fractal* fractal);
+void RenderFractal(const RenderConfig* cfg, const Fractal* fractal);
 
 #endif // RENDER_H
