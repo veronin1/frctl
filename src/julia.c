@@ -1,5 +1,3 @@
-// Julia set
-
 #include "julia.h"
 #include "fractal.h"
 #include "status_codes.h"
@@ -9,20 +7,14 @@
 
 int julia(const Fractal* fractal, const size_t width, const size_t height,
           uint16_t* iterBuffer) {
-  if (!fractal) {
-    return FRACTAL_ERR_NULL_POINTER;
-  }
-
-  if (height == 0 || width == 0) {
-    return FRACTAL_ERR_INVALID_DIMENSIONS;
+  FractalStatus status =
+      validate_fractal_inputs(fractal, width, height, iterBuffer);
+  if (status != FRACTAL_SUCCESS) {
+    return status;
   }
 
   if (fractal->type != FRACTAL_JULIA) {
     return FRACTAL_ERR_WRONG_TYPE;
-  }
-
-  if (!iterBuffer) {
-    return FRACTAL_ERR_NULL_ITERBUFFER;
   }
 
   for (size_t y = 0; y < height; ++y) {
