@@ -14,7 +14,8 @@
 // 0.7111476192
 // 0.2484631949
 
-int julia(const Fractal* fractal, const size_t width, const size_t height) {
+int julia(const Fractal* fractal, const size_t width, const size_t height,
+          uint16_t* iterBuffer) {
   if (!fractal || !height || !width) {
     return JULIA_FAILURE;
   }
@@ -23,24 +24,30 @@ int julia(const Fractal* fractal, const size_t width, const size_t height) {
     return JULIA_FAILURE;
   }
 
-  uint16_t* iterBuffer = malloc(width * height * sizeof(uint16_t));
-  if (!iterBuffer) {
-    return JULIA_FAILURE;
-  }
-
   for (size_t y = 0; y < height; ++y) {
     for (size_t x = 0; x < width; ++x) {
-      double zx =
-          ((double)x / (double)width) * (fractal->maxReal - fractal->minReal) +
-          fractal->minReal;
-      double zy =
-          ((double)y / (double)height) * (fractal->maxImag - fractal->minImag) +
-          fractal->minImag;
-      double complex c = CMPLX(0.7111476192, 0.2484631949);
+      iterBuffer[y * width + x] = julia_iter(fractal, x, y, width, height);
     }
   }
   return JULIA_SUCCESS;
 }
 
-uint16_t julia_iterint(const Fractal* fractal, size_t x, size_t y, size_t width,
-                       size_t height);
+uint16_t julia_iter(const Fractal* fractal, size_t x, size_t y, size_t width,
+                    size_t height) {
+  double zx =
+      ((double)x / (double)width) * (fractal->maxReal - fractal->minReal) +
+      fractal->minReal;
+  double zy =
+      ((double)y / (double)height) * (fractal->maxImag - fractal->minImag) +
+      fractal->minImag;
+  double complex c = CMPLX(0.7111476192, 0.2484631949);
+  double complex z = CMPLX(zx, zy);
+
+  size_t counter = 0;
+
+  while (cabs(z) < 2 && counter < fractal->maxIter) {
+    z = z * z + c;
+    ++counter;
+  }
+  return (uint16_t)counter;
+}
