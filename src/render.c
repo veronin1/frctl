@@ -14,7 +14,7 @@ void RenderMandelbrot(const RenderConfig* cfg, const Fractal* fractal) {
   InitWindow((int)cfg->width, (int)cfg->height, cfg->title);
   SetTargetFPS(cfg->maxFPS);
 
-  uint16_t* iterBuffer = malloc(cfg->width * cfg->height * sizeof(int));
+  uint16_t* iterBuffer = calloc(cfg->width * cfg->height, sizeof(uint16_t));
   if (!iterBuffer) {
     return;
   }
@@ -39,4 +39,5 @@ void RenderMandelbrot(const RenderConfig* cfg, const Fractal* fractal) {
     EndDrawing();
   }
   CloseWindow();
+  free(iterBuffer);
 }
