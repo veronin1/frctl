@@ -1,8 +1,9 @@
 #include "mandelbrot.h"
-#include <complex.h>
-#include <stdlib.h>
 #include "fractal.h"
 #include "status_codes.h"
+
+#include <complex.h>
+#include <stdlib.h>
 
 // Mandelbrot set: z_{n+1} = z_n^2 + c
 int mandelbrot(const Fractal* fractal, const size_t width, const size_t height,
