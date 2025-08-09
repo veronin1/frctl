@@ -1,9 +1,17 @@
+#ifndef RENDER_H
+#define RENDER_H
+
+#include "fractal.h"
+
+#include <stdlib.h>
+
+
 typedef struct {
-    int width, height;
+    size_t width, height;
     char* title;
     int maxFPS;
-    double minReal, maxReal;
-    double minImag, maxImag;
 } RenderConfig;
 
-void RenderMandelbrot(const RenderConfig* cfg);
+void RenderMandelbrot(const RenderConfig* cfg, const Fractal* fractal);
+
+#endif // RENDER_H

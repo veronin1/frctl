@@ -1,6 +1,6 @@
 # frctl
 
-`frctl` is a Mandelbrot& & Julia set visualiser written in C using raylib
+`frctl` is a Mandelbrot & Julia set visualiser written in C using raylib
 
 ---
 
@@ -8,17 +8,24 @@
 
 > n/a
 
+---
+
 # Compilation & Running
 
 > **Requirements:**
+- raylib
+- CMake >= 3.10
 - C compiler (gcc, clang)
 - UNIX System (Linux, MacOS, WSL)
-- raylib
+
+---
 
 ```sh
 make
 ./mandel
 ```
+
+---
 
 # License
 

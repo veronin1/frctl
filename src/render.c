@@ -1,19 +1,43 @@
+#include "render.h"
+#include "fractal.h"
+#include "mandelbrot.h"
+
 #include <raylib.h>
+#include <stdint.h>
+#include <stdlib.h>
 
-typedef struct {
-    int width, height;
-    char* title;
-    int maxFPS;
-    double minReal, maxReal;
-    double minImag, maxImag;
-} RenderConfig;
+void RenderMandelbrot(const RenderConfig* cfg, const Fractal* fractal) {
+  if (!cfg || !fractal) {
+    return;
+  }
 
-void RenderMandelbrot(const RenderConfig* cfg) {
-    InitWindow(cfg->width, cfg->height, cfg->title);
-    SetTargetFPS(cfg->maxFPS);
+  InitWindow((int)cfg->width, (int)cfg->height, cfg->title);
+  SetTargetFPS(cfg->maxFPS);
 
-    while (!WindowShouldClose()) {
-        //
+  uint16_t* iterBuffer = calloc(cfg->width * cfg->height, sizeof(uint16_t));
+  if (!iterBuffer) {
+    return;
+  }
+
+  if (fractal->type == FRACTAL_MANDELBROT) {
+    mandelbrot(fractal, cfg->width, cfg->height, iterBuffer);
+  }
+
+  while (!WindowShouldClose()) {
+    for (size_t y = 0; y < cfg->height; ++y) {
+      for (size_t x = 0; x < cfg->width; ++x) {
+        BeginDrawing();
+        Color color;
+        if (iterBuffer[y * cfg->width + x] == fractal->maxIter) {
+          color = BLACK;
+        } else {
+          color = RED;
+        }
+        DrawPixel((int)x, (int)y, color);
+      }
     }
-    CloseWindow();
+    EndDrawing();
+  }
+  CloseWindow();
+  free(iterBuffer);
 }
