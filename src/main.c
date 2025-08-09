@@ -36,8 +36,8 @@ int main(void) {
     free(fractal);
     return 1;
   }
-  cfg->height = 1440;
-  cfg->width = 2560;
+  cfg->height = 800;
+  cfg->width = 800;
   cfg->title = "frctl";
   cfg->maxFPS = 60;
 

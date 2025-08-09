@@ -25,6 +25,7 @@ add_executable(frctl
     src/mandelbrot.c
     src/render.c
     src/julia.c
+    src/fractal.c
 )
 
 # Include directories

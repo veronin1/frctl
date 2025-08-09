@@ -5,7 +5,6 @@
 
 #include <stdlib.h>
 
-
 typedef struct {
     size_t width, height;
     char* title;
