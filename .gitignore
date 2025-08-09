@@ -1,0 +1,9 @@
+.cache/
+CMakeLists.txt~
+bin/
+build/
+include/fractal.h~
+include/mandelbrot.h~
+notes.txt~
+src/mandelbrot.c~
+src/render.c~
