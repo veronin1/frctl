@@ -33,7 +33,7 @@ void RenderMandelbrot(const RenderConfig* cfg, const Fractal* fractal) {
         } else {
           color = RED;
         }
-        DrawPixel((int)y, (int)x, color);
+        DrawPixel((int)x, (int)y, color);
       }
     }
     EndDrawing();
