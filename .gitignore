@@ -7,3 +7,5 @@ include/mandelbrot.h~
 notes.txt~
 src/mandelbrot.c~
 src/render.c~
+notes.txt
+.gitignore~
