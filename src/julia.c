@@ -21,12 +21,16 @@ int julia(const Fractal* fractal, const size_t width, const size_t height,
     return FRACTAL_ERR_WRONG_TYPE;
   }
 
+  if (!iterBuffer) {
+    return FRACTAL_ERR_NULL_ITERBUFFER;
+  }
+
   for (size_t y = 0; y < height; ++y) {
     for (size_t x = 0; x < width; ++x) {
       iterBuffer[y * width + x] = julia_iter(fractal, x, y, width, height);
     }
   }
-  return FRACTAL_FAILURE;
+  return FRACTAL_SUCCESS;
 }
 
 uint16_t julia_iter(const Fractal* fractal, size_t x, size_t y, size_t width,
