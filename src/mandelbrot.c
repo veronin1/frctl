@@ -2,16 +2,19 @@
 #include <complex.h>
 #include <stdlib.h>
 #include "fractal.h"
+#include "status_codes.h"
 
 // Mandelbrot set: z_{n+1} = z_n^2 + c
 int mandelbrot(const Fractal* fractal, const size_t width, const size_t height,
                uint16_t* iterBuffer) {
-  if (!fractal || !iterBuffer) {
-    return MANDELBROT_FAILURE;
+  FractalStatus status =
+      validate_fractal_inputs(fractal, width, height, iterBuffer);
+  if (status != FRACTAL_SUCCESS) {
+    return status;
   }
 
   if (fractal->type != FRACTAL_MANDELBROT) {
-    return MANDELBROT_FAILURE;
+    return FRACTAL_ERR_WRONG_TYPE;
   }
 
   for (size_t y = 0; y < height; ++y) {
@@ -20,7 +23,7 @@ int mandelbrot(const Fractal* fractal, const size_t width, const size_t height,
       ;
     }
   }
-  return MANDELBROT_SUCCESS;
+  return FRACTAL_SUCCESS;
 }
 
 uint16_t mandelbrot_iter(const Fractal* fractal, size_t x, size_t y,
