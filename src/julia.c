@@ -3,6 +3,7 @@
 #include "julia.h"
 #include "fractal.h"
 
+#include <complex.h>
 #include <stdint.h>
 
 #define JULIA_SUCCESS 0;
@@ -22,6 +23,11 @@ int julia(const Fractal* fractal, const size_t width, const size_t height) {
     return JULIA_FAILURE;
   }
 
+  uint16_t* iterBuffer = malloc(width * height * sizeof(uint16_t));
+  if (!iterBuffer) {
+    return JULIA_FAILURE;
+  }
+
   for (size_t y = 0; y < height; ++y) {
     for (size_t x = 0; x < width; ++x) {
       double zx =
@@ -30,7 +36,7 @@ int julia(const Fractal* fractal, const size_t width, const size_t height) {
       double zy =
           ((double)y / (double)height) * (fractal->maxImag - fractal->minImag) +
           fractal->minImag;
-      double complex c = 0;
+      double complex c = CMPLX(0.7111476192, 0.2484631949);
     }
   }
   return JULIA_SUCCESS;
