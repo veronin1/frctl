@@ -1,6 +1,7 @@
 #include "colour.h"
 #include "status_codes.h"
 
+#include <math.h>
 #include <raylib.h>
 #include <stdlib.h>
 
@@ -53,14 +54,15 @@ int mapIterationToColor(float normalisedValue, Color* colour) {
   uint8_t sat = (uint8_t)normalisedValue * (uint8_t)100;
   uint8_t val = (uint8_t)normalisedValue * (uint8_t)100;
 
-  normalisedValue *= 255;
-  if (normalisedValue > 255) {
-    normalisedValue = 255;
+  hue /= 60;
+
+  if (hue >= 0 && hue <= 1) {
+    colour->r = val * 255;
+    colour->g = val * (1 - sat * (1 - ((hue - (uint8_t)floor(hue)) * 255)));
+    colour->b = val * (1 - sat) * 255;
+    colour->a = 255;
+  } else if (hue >= 1 && hue <= 2) {
   }
-  colour->r = (uint8_t)normalisedValue;
-  colour->b = 0;
-  colour->g = 0;
-  colour->a = 255;
 
   return FRACTAL_SUCCESS;
 }
