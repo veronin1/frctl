@@ -12,6 +12,12 @@ int newton(const Fractal* fractal, const size_t width, const size_t height,
   if (status != FRACTAL_SUCCESS) {
     return status;
   }
+
+  for (size_t y = 0; y < height; ++y) {
+    for (size_t x = 0; x < width; ++x) {
+      iterBuffer[y * width + x] = newton_iter(fractal, x, y, width, height);
+    }
+  }
   return FRACTAL_SUCCESS;
 }
 
