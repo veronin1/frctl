@@ -48,13 +48,18 @@ int mapIterationToColor(float normalisedValue, Color* colour) {
     return COLOUR_ERR_NORMALISED_OUT_OF_RANGE;
   }
 
+  // HSV: Hue, Sat, Val (Bright)
+  uint8_t hue = (uint8_t)normalisedValue * (uint8_t)360;
+  uint8_t sat = (uint8_t)normalisedValue * (uint8_t)100;
+  uint8_t val = (uint8_t)normalisedValue * (uint8_t)100;
+
   normalisedValue *= 255;
   if (normalisedValue > 255) {
     normalisedValue = 255;
   }
   colour->r = (uint8_t)normalisedValue;
-  colour->b = (uint8_t)normalisedValue;
-  colour->g = (uint8_t)normalisedValue;
+  colour->b = 0;
+  colour->g = 0;
   colour->a = 255;
 
   return FRACTAL_SUCCESS;
