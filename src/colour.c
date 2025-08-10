@@ -1,4 +1,5 @@
 #include "colour.h"
+#include "status_codes.h"
 
 #include <raylib.h>
 #include <stdlib.h>
@@ -39,6 +40,19 @@ float* normaliseIterations(uint16_t* iterBuffer, size_t length) {
 }
 
 int mapIterationToColor(float normalisedValue, Color* colour) {
-  // to codes
-  return colour;
+  if (colour == NULL) {
+    return COLOUR_ERR_NULL_POINTER;
+  }
+
+  if (normalisedValue < 0.0f || normalisedValue > 1.0f) {
+    return COLOUR_ERR_NORMALISED_OUT_OF_RANGE;
+  }
+
+  normalisedValue *= 255;
+  colour->r = (uint8_t)normalisedValue;
+  colour->b = (uint8_t)normalisedValue;
+  colour->g = (uint8_t)normalisedValue;
+  colour->a = 255;
+
+  return FRACTAL_SUCCESS;
 }
