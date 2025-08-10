@@ -37,7 +37,7 @@ uint16_t newton_iter(const Fractal* fractal, size_t x, size_t y,
     z = z - Function(z) / Derivative(z);
     counter++;
 
-    if (cabs(z) < 1e-6) {
+    if (cabs(Function(z)) < 1e-6) {
       break;
     }
   }
