@@ -8,7 +8,8 @@
 typedef enum {
   FRACTAL_MANDELBROT,
   FRACTAL_JULIA,
-  FRACTAL_BURNINGSHIP
+  FRACTAL_BURNINGSHIP,
+  FRACTAL_NEWTON
 } FractalType;
 
 typedef struct {
