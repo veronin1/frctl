@@ -33,9 +33,21 @@ uint16_t newton_iter(const Fractal* fractal, size_t x, size_t y,
   double complex z = CMPLX(zx, zy);
 
   size_t counter = 0;
-  while (cabs(z) <= 2 && counter < fractal->maxIter) {
+  while (counter < fractal->maxIter) {
     z = (z * z) - ((z * z * z - 1) / 3 * z * z);
     counter++;
+
+    if (cabs(z) < 1e-6) {
+      break;
+    }
   }
   return (uint16_t)counter;
+}
+
+complex double Function(complex double z) {
+  return cpow(z, 3) - CMPLX(1.0, 0.0);
+}
+
+complex double Derivative(complex double z) {
+  return 3.0 * (z * z);
 }
