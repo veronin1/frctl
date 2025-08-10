@@ -32,13 +32,13 @@ float* normaliseIterations(uint16_t* iterBuffer, size_t length) {
     if (max == min) {
       normalisedValues[i] = 0.0f;
     } else {
-      normalisedValues[i] = (float)(iterBuffer[i] - min) / (max - min);
+      normalisedValues[i] = (iterBuffer[i] - min) / (float)(max - min);
     }
   }
   return normalisedValues;
 }
 
-Color* mapIterationToColor(uint16_t iteration, Color* colour) {
+int mapIterationToColor(float normalisedValue, Color* colour) {
   // to codes
   return colour;
 }
