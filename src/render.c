@@ -2,6 +2,7 @@
 #include "fractal.h"
 #include "julia.h"
 #include "mandelbrot.h"
+#include "newton.h"
 
 #include <raylib.h>
 #include <stdint.h>
@@ -25,6 +26,8 @@ void RenderFractal(const RenderConfig* cfg, const Fractal* fractal) {
     mandelbrot(fractal, cfg->width, cfg->height, iterBuffer);
   } else if (fractal->type == FRACTAL_JULIA) {
     julia(fractal, cfg->width, cfg->height, iterBuffer);
+  } else if (fractal->type == FRACTAL_NEWTON) {
+    newton(fractal, cfg->width, cfg->height, iterBuffer);
   } else {
     free(iterBuffer);
     CloseWindow();
