@@ -61,7 +61,6 @@ int mapIterationToColor(float normalisedValue, Color* colour) {
     colour->g = val * (1 - sat * (1 - ((hue - (uint8_t)floor(hue)) * 255)));
     colour->b = val * (1 - sat) * 255;
     colour->a = 255;
-  } else if (hue >= 1 && hue <= 2) {
   }
 
   return FRACTAL_SUCCESS;
