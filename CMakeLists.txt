@@ -27,6 +27,7 @@ add_executable(frctl
     src/julia.c
     src/fractal.c
     src/newton.c
+    src/colour.c
 )
 
 # Include directories
