@@ -41,12 +41,12 @@ uint16_t newton_iter(const Fractal* fractal, size_t x, size_t y,
       break;
     }
 
-    z = z - fz / dz;
-    counter++;
-
     if (cabs(fz) < 1e-12) {
       break;
     }
+
+    z = z - fz / dz;
+    counter++;
   }
   return (uint16_t)counter;
 }
