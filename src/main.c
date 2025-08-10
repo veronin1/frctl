@@ -24,7 +24,7 @@ int main(void) {
     return 1;
   }
 
-  fractal->type = FRACTAL_JULIA;
+  fractal->type = FRACTAL_NEWTON;
   fractal->minReal = -1.5;
   fractal->maxReal = 1.5;
   fractal->minImag = -1.5;
