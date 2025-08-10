@@ -34,10 +34,17 @@ uint16_t newton_iter(const Fractal* fractal, size_t x, size_t y,
 
   size_t counter = 0;
   while (counter < fractal->maxIter) {
-    z = z - Function(z) / Derivative(z);
+    complex double fz = Function(z);
+    complex double dz = Derivative(z);
+
+    if (dz == 0) {
+      break;
+    }
+
+    z = z - fz / dz;
     counter++;
 
-    if (cabs(Function(z)) < 1e-6) {
+    if (cabs(fz) < 1e-12) {
       break;
     }
   }
