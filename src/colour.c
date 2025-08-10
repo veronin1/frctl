@@ -49,6 +49,9 @@ int mapIterationToColor(float normalisedValue, Color* colour) {
   }
 
   normalisedValue *= 255;
+  if (normalisedValue > 255) {
+    normalisedValue = 255;
+  }
   colour->r = (uint8_t)normalisedValue;
   colour->b = (uint8_t)normalisedValue;
   colour->g = (uint8_t)normalisedValue;
