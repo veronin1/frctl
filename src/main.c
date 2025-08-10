@@ -32,10 +32,10 @@ int main(void) {
   }
 
   fractal->type = FRACTAL_NEWTON;
-  fractal->minReal = -2.5;
-  fractal->maxReal = 1.0;
+  fractal->minReal = -2.0;
+  fractal->maxReal = 2.0;
   fractal->minImag = -2.0;
-  fractal->maxImag = 1.0;
+  fractal->maxImag = 2.0;
   fractal->maxIter = 300;
 
   RenderConfig* cfg = malloc(sizeof(RenderConfig));
