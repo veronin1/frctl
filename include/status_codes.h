@@ -9,10 +9,11 @@ typedef enum {
   FRACTAL_ERR_WRONG_TYPE = -4,
   FRACTAL_ERR_NULL_ITERBUFFER = -5,
 
-  // fractacsl specfiic error codes start at 100
+  // fractal specific error codes start at 100
   FRACTAL_ERR_BASE = -100,
 
-  // fractal (error = FRACTAL_ERR_BASE - 1...
+  COLOUR_ERR_NULL_POINTER = FRACTAL_ERR_BASE - 1,
+  COLOUR_ERR_NORMALISED_OUT_OF_RANGE = FRACTAL_ERR_BASE - 2,
 } FractalStatus;
 
 #endif // STATUS_CODES_H
