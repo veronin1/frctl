@@ -85,3 +85,6 @@ int mapIterationToColor(float normalisedValue, Color* colour) {
 
   return FRACTAL_SUCCESS;
 }
+
+void hsv_to_rgb(float h, float s, float v, uint8_t* r, uint8_t* g, uint8_t* b) {
+}
