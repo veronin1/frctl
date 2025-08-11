@@ -4,6 +4,7 @@
 #include "render.h"
 
 /* MANDELBROT
+  fractal->type = FRACTAL_MANDELBROT;
   fractal->minReal = -2.0;
   fractal->maxReal = 1.0;
   fractal->minImag = -1.5;
@@ -11,13 +12,15 @@
   fractal->maxIter = 1000;
 
   JULIA
-  fractal->minReal = -1.5;
+  fractal->type = FRACTAL_JULIA;
+fractal->minReal = -1.5;
   fractal->maxReal = 1.5;
   fractal->minImag = -1.5;
   fractal->maxImag = 1.5;
   fractal->maxIter = 100;
 
   NEWTON
+    fractal->type = FRACTAL_NEWTON;
   fractal->minReal = -2.0;
   fractal->maxReal = 2.0;
   fractal->minImag = -2.0;
@@ -36,7 +39,7 @@ int main(void) {
   fractal->maxReal = 1.5;
   fractal->minImag = -1.5;
   fractal->maxImag = 1.5;
-  fractal->maxIter = 10000;
+  fractal->maxIter = 100;
 
   RenderConfig* cfg = malloc(sizeof(RenderConfig));
   if (!cfg) {
