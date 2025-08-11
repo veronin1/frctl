@@ -97,26 +97,26 @@ void hsv_to_rgb(float h, float s, float v, uint8_t* r, uint8_t* g, uint8_t* b) {
   if (h <= 0 && h < 1) {
     R = c;
     G = x;
-    B = min;
+    B = 0;
   } else if (h <= 1 && h < 2) {
     R = x;
     G = c;
-    B = min;
+    B = 0;
   } else if (h <= 2 && h < 3) {
-    R = min;
+    R = 0;
     G = c;
     B = x;
   } else if (h <= 3 && h < 4) {
-    R = min;
+    R = 0;
     G = x;
     B = c;
   } else if (h <= 4 && h <= 5) {
     R = x;
-    G = min;
+    G = 0;
     B = c;
   } else if (h <= 5 && h < 6) {
     R = c;
-    G = min;
+    G = 0;
     B = x;
   } else {
     R = 0;
