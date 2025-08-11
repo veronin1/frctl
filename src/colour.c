@@ -3,6 +3,7 @@
 
 #include <math.h>
 #include <raylib.h>
+#include <stdint.h>
 #include <stdlib.h>
 
 float* normaliseIterations(uint16_t* iterBuffer, size_t length) {
@@ -51,8 +52,8 @@ int mapIterationToColor(float normalisedValue, Color* colour) {
 
   // HSV: Hue, Sat, Val (Bright)
   float hue = normalisedValue * 360.0f;
-  uint8_t sat = (uint8_t)normalisedValue * (uint8_t)100;
-  uint8_t val = (uint8_t)normalisedValue * (uint8_t)100;
+  // uint8_t sat = (uint8_t)normalisedValue * (uint8_t)100;
+  // uint8_t val = (uint8_t)normalisedValue * (uint8_t)100;
 
   colour->a = 255;
 
@@ -61,25 +62,25 @@ int mapIterationToColor(float normalisedValue, Color* colour) {
     colour->g = (uint8_t)((hue / 60.0f) * 255.0f);
     colour->b = 0;
   } else if (hue >= 60 && hue <= 120) {
-    colour->r = 1 - (1 / 60) * hue - 60;
+    colour->r = (uint8_t)(((120.0f - hue) / 60.0f) * 255.0f);
     colour->g = 0;
     colour->b = 255;
   } else if (hue >= 120 && hue <= 180) {
     colour->r = 0;
     colour->b = 255;
-    colour->g = (1 / 60) * hue - 120;
+    colour->g = (uint8_t)(((hue - 120.0f) / 60.0f) * 255.0f);
   } else if (hue >= 180 && hue <= 240) {
     colour->r = 0;
-    colour->b = 1 - (1 / 60) * hue - 180;
+    colour->b = (uint8_t)(((240.0f - hue) / 60.0f) * 255.0f);
     colour->g = 255;
   } else if (hue >= 240 && hue <= 300) {
-  }
-
-  if (hue >= 0 && hue <= 1) {
-    colour->r = val * 255;
-    colour->g = val * (1 - sat * (1 - ((hue - (uint8_t)floor(hue)) * 255)));
-    colour->b = val * (1 - sat) * 255;
-    colour->a = 255;
+    colour->r = (uint8_t)(((hue - 240.0f) / 60.0f) * 255.0f);
+    colour->g = 0;
+    colour->b = 255;
+  } else if (hue >= 300 && hue <= 360) {
+    colour->r = 255;
+    colour->g = 0;
+    colour->b = (uint8_t)(((360.0f - hue) / 60.0f) * 255.0f);
   }
 
   return FRACTAL_SUCCESS;
