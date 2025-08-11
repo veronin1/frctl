@@ -54,7 +54,25 @@ int mapIterationToColor(float normalisedValue, Color* colour) {
   uint8_t sat = (uint8_t)normalisedValue * (uint8_t)100;
   uint8_t val = (uint8_t)normalisedValue * (uint8_t)100;
 
-  hue /= 60;
+  colour->a = 255;
+  if (hue >= 0 && hue <= 60) {
+    colour->r = 255;
+    colour->g = 0;
+    colour->b = 1 / 60 * hue;
+  } else if (hue >= 60 && hue <= 120) {
+    colour->r = 1 - (1 / 60) * hue - 60;
+    colour->g = 0;
+    colour->b = 255;
+  } else if (hue >= 120 && hue <= 180) {
+    colour->r = 0;
+    colour->b = 255;
+    colour->g = (1 / 60) * hue - 120;
+  } else if (hue >= 180 && hue <= 240) {
+    colour->r = 0;
+    colour->b = 1 - (1 / 60) * hue - 180;
+    colour->g = 255;
+  } else if (hue >= 240 && hue <= 300) {
+  }
 
   if (hue >= 0 && hue <= 1) {
     colour->r = val * 255;
