@@ -93,4 +93,34 @@ void hsv_to_rgb(float h, float s, float v, uint8_t* r, uint8_t* g, uint8_t* b) {
   float R, G, B;
   h = h / 60; // h /= 60
   float x = c * (1.0f - fabsf(fmodf(h, 2.0f) - 1.0f));
+
+  if (h <= 0 && h < 1) {
+    R = c;
+    G = x;
+    B = min;
+  } else if (h <= 1 && h < 2) {
+    R = x;
+    G = c;
+    B = min;
+  } else if (h <= 2 && h < 3) {
+    R = min;
+    G = c;
+    B = x;
+  } else if (h <= 3 && h < 4) {
+    R = min;
+    G = x;
+    B = c;
+  } else if (h <= 4 && h <= 5) {
+    R = x;
+    G = min;
+    B = c;
+  } else if (h <= 5 && h < 6) {
+    R = c;
+    G = min;
+    B = x;
+  }
+
+  r = (uint8_t)R + min;
+  g = (uint8_t)G + min;
+  b = (uint8_t)B + min;
 }
