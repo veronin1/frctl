@@ -118,9 +118,17 @@ void hsv_to_rgb(float h, float s, float v, uint8_t* r, uint8_t* g, uint8_t* b) {
     R = c;
     G = min;
     B = x;
+  } else {
+    R = 0;
+    G = 0;
+    B = 0;
   }
 
-  r = (uint8_t)R + min;
-  g = (uint8_t)G + min;
-  b = (uint8_t)B + min;
+  R += min;
+  B += min;
+  G += min;
+
+  *r = (uint8_t)(R * 255.0f);
+  *g = (uint8_t)(G * 255.0f);
+  *b = (uint8_t)(B * 255.0f);
 }
