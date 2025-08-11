@@ -55,6 +55,9 @@ int mapIterationToColor(float normalisedValue, Color* colour) {
   uint8_t sat = (uint8_t)normalisedValue * (uint8_t)100;
   uint8_t val = (uint8_t)normalisedValue * (uint8_t)100;
 
+  hsv_to_rgba(hue, sat, val, &colour->r, &colour->g, &colour->b, &colour->a,
+              UINT8_MAX);
+
   return FRACTAL_SUCCESS;
 }
 
