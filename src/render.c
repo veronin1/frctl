@@ -38,7 +38,11 @@ void RenderFractal(const RenderConfig* cfg, const Fractal* fractal) {
 
   size_t length = cfg->width * cfg->height;
 
-  float* normalisedValues = normaliseIterations(iterBuffer, length);
+  float* normalisedValues = malloc(length * sizeof(float));
+  if (!normalisedValues) {
+    return;
+  }
+  normaliseIterations(iterBuffer, length, normalisedValues);
 
   while (!WindowShouldClose()) {
     BeginDrawing();
