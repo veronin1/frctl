@@ -52,8 +52,8 @@ int mapIterationToColor(float normalisedValue, Color* colour) {
 
   // HSV: Hue, Sat, Val (Bright)
   float hue = normalisedValue * 360.0f;
-  uint8_t sat = (uint8_t)normalisedValue * (uint8_t)100;
-  uint8_t val = (uint8_t)normalisedValue * (uint8_t)100;
+  float sat = normalisedValue;
+  float val = normalisedValue;
 
   hsv_to_rgba(hue, sat, val, &colour->r, &colour->g, &colour->b, &colour->a,
               UINT8_MAX);
@@ -70,35 +70,20 @@ void hsv_to_rgba(float h, float s, float v, uint8_t* r, uint8_t* g, uint8_t* b,
   h = h / 60; // h /= 60
   float x = c * (1.0f - fabsf(fmodf(h, 2.0f) - 1.0f));
 
-  if (h <= 0 && h < 1) {
-    R = c;
-    G = x;
-    B = 0;
-  } else if (h <= 1 && h < 2) {
-    R = x;
-    G = c;
-    B = 0;
-  } else if (h <= 2 && h < 3) {
-    R = 0;
-    G = c;
-    B = x;
-  } else if (h <= 3 && h < 4) {
-    R = 0;
-    G = x;
-    B = c;
-  } else if (h <= 4 && h <= 5) {
-    R = x;
-    G = 0;
-    B = c;
-  } else if (h <= 5 && h < 6) {
-    R = c;
-    G = 0;
-    B = x;
-  } else {
-    R = 0;
-    G = 0;
-    B = 0;
-  }
+  if (h >= 0 && h < 1)
+    R = c, G = x, B = 0;
+  else if (h >= 1 && h < 2)
+    R = x, G = c, B = 0;
+  else if (h >= 2 && h < 3)
+    R = 0, G = c, B = x;
+  else if (h >= 3 && h < 4)
+    R = 0, G = x, B = c;
+  else if (h >= 4 && h < 5)
+    R = x, G = 0, B = c;
+  else if (h >= 5 && h < 6)
+    R = c, G = 0, B = x;
+  else
+    R = 0, G = 0, B = 0;
 
   R += min;
   B += min;
