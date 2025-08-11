@@ -6,8 +6,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-float* normaliseIterations(uint16_t* iterBuffer, size_t length) {
-  if (length == 0) {
+float* normaliseIterations(uint16_t* iterBuffer, size_t length,
+                           float* normalisedValues) {
+  if (length == 0 || !normalisedValues) {
     return NULL;
   }
 
@@ -22,12 +23,6 @@ float* normaliseIterations(uint16_t* iterBuffer, size_t length) {
     if (iterBuffer[i] > max) {
       max = iterBuffer[i];
     }
-  }
-
-  // array of normalised floats
-  float* normalisedValues = malloc(length * sizeof(float));
-  if (!normalisedValues) {
-    return NULL;
   }
 
   // normalise as: norm = (original - min) / (max - min)
