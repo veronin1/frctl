@@ -50,15 +50,16 @@ int mapIterationToColor(float normalisedValue, Color* colour) {
   }
 
   // HSV: Hue, Sat, Val (Bright)
-  uint8_t hue = (uint8_t)normalisedValue * (uint8_t)360;
+  float hue = normalisedValue * 360.0f;
   uint8_t sat = (uint8_t)normalisedValue * (uint8_t)100;
   uint8_t val = (uint8_t)normalisedValue * (uint8_t)100;
 
   colour->a = 255;
+
   if (hue >= 0 && hue <= 60) {
     colour->r = 255;
-    colour->g = 0;
-    colour->b = 1 / 60 * hue;
+    colour->g = (uint8_t)((hue / 60.0f) * 255.0f);
+    colour->b = 0;
   } else if (hue >= 60 && hue <= 120) {
     colour->r = 1 - (1 / 60) * hue - 60;
     colour->g = 0;
