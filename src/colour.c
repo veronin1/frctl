@@ -92,5 +92,5 @@ void hsv_to_rgb(float h, float s, float v, uint8_t* r, uint8_t* g, uint8_t* b) {
   float min = max - c;
   float R, G, B;
   h = h / 60; // h /= 60
-  float x = c * (1 - (float)fmod(h, 2.0f) - 1);
+  float x = c * (1.0f - fabsf(fmodf(h, 2.0f) - 1.0f));
 }
