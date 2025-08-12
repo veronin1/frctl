@@ -10,7 +10,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-void RenderFractal(const RenderConfig* cfg, const Fractal* fractal) {
+void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   if (!cfg || !fractal) {
     return;
   }
