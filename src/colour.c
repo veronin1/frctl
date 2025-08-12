@@ -8,7 +8,7 @@
 
 float* normaliseIterations(uint16_t* iterBuffer, size_t length,
                            float* normalisedValues) {
-  if (length == 0 || !normalisedValues) {
+  if (!iterBuffer || length == 0 || !normalisedValues) {
     return NULL;
   }
 
