@@ -40,7 +40,7 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
       newton(fractal, cfg->width, cfg->height, iterBuffer);
       break;
     case FRACTAL_BURNINGSHIP:
-      // do nothing
+      goto cleanup;
     default:
       goto cleanup;
   }
