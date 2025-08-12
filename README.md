@@ -1,6 +1,6 @@
 # frctl
 
-`frctl` is a Mandelbrot & Julia set visualiser written in C using raylib
+frctl is a fractal visualiser written in C using raylib, supporting Mandelbrot, Julia and Newton fractals.
 
 ---
 
@@ -18,11 +18,13 @@
 - C compiler (gcc, clang)
 - UNIX System (Linux, MacOS, WSL)
 
----
-
 ```sh
+mkdir build
+cd build
+cmake ..
 make
-./mandel
+cd bin
+./frctl
 ```
 
 ---
