@@ -62,7 +62,7 @@ void hsv_to_rgba(float h, float s, float v, uint8_t* r, uint8_t* g, uint8_t* b,
   float c = s * v;
   float min = max - c;
   float R, G, B;
-  h = h / 60; // h /= 60
+  h = h / 60;
   float x = c * (1.0f - fabsf(fmodf(h, 2.0f) - 1.0f));
 
   if (h >= 0 && h < 1)
