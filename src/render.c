@@ -29,17 +29,23 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
     return;
   }
 
-  if (fractal->type == FRACTAL_MANDELBROT) {
-    mandelbrot(fractal, cfg->width, cfg->height, iterBuffer);
-  } else if (fractal->type == FRACTAL_JULIA) {
-    julia(fractal, cfg->width, cfg->height, iterBuffer);
-  } else if (fractal->type == FRACTAL_NEWTON) {
-    newton(fractal, cfg->width, cfg->height, iterBuffer);
-  } else {
-    free(iterBuffer);
-    free(normalisedValues);
-    CloseWindow();
-    return;
+  switch (fractal->type) {
+    case FRACTAL_MANDELBROT:
+      mandelbrot(fractal, cfg->width, cfg->height, iterBuffer);
+      break;
+    case FRACTAL_JULIA:
+      julia(fractal, cfg->width, cfg->height, iterBuffer);
+      break;
+    case FRACTAL_NEWTON:
+      newton(fractal, cfg->width, cfg->height, iterBuffer);
+      break;
+    case FRACTAL_BURNINGSHIP:
+      // do nothing
+    default:
+      free(iterBuffer);
+      free(normalisedValues);
+      CloseWindow();
+      return;
   }
 
   normaliseIterations(iterBuffer, length, normalisedValues);
