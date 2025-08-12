@@ -84,9 +84,25 @@ void hsv_to_rgba(float h, float s, float v, uint8_t* r, uint8_t* g, uint8_t* b,
   B += min;
   G += min;
 
-  *r = R * 255.0f > 255.0f ? (uint8_t)255 : (uint8_t)(R * 255.0f);
-  *g = G * 255.0f > 255.0f ? (uint8_t)255 : (uint8_t)(G * 255.0f);
-  *b = B * 255.0f > 255.0f ? (uint8_t)255 : (uint8_t)(B * 255.0f);
+  static inline uint8_t clamp8(float value) {
+    if (value < 0.0f)
+      return 0;
+    if (value > 255.0f)
+      return 255;
+    return (uint8_t)value;
+  }
+
+  *r = clamp8(R * 255.0f);
+  *g = clamp8(G * 255.0f);
+  *b = clamp8(B * 255.0f);
 
   *a = alpha;
+}
+
+uint8_t clamp8(float value) {
+  if (value < 0.0f)
+    return 0;
+  if (value > 255.0f)
+    return 255;
+  return (uint8_t)value;
 }
