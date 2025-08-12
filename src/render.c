@@ -1,14 +1,16 @@
 #include "render.h"
+#include "colour.h"
 #include "fractal.h"
 #include "julia.h"
 #include "mandelbrot.h"
 #include "newton.h"
+#include "status_codes.h"
 
 #include <raylib.h>
 #include <stdint.h>
 #include <stdlib.h>
 
-void RenderFractal(const RenderConfig* cfg, const Fractal* fractal) {
+void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   if (!cfg || !fractal) {
     return;
   }
@@ -34,22 +36,32 @@ void RenderFractal(const RenderConfig* cfg, const Fractal* fractal) {
     return;
   }
 
+  size_t length = cfg->width * cfg->height;
+
+  float* normalisedValues = malloc(length * sizeof(float));
+  if (!normalisedValues) {
+    return;
+  }
+  normaliseIterations(iterBuffer, length, normalisedValues);
+
   while (!WindowShouldClose()) {
     BeginDrawing();
     for (size_t y = 0; y < cfg->height; ++y) {
       for (size_t x = 0; x < cfg->width; ++x) {
-        uint16_t iter = iterBuffer[y * cfg->width + x];
-        Color color;
-        if (iter == fractal->maxIter) {
-          color = BLACK;
-        } else {
-          color = RED;
+        float normalisedValue = normalisedValues[y * cfg->width + x];
+        Color colour;
+
+        int status = mapIterationToColor(normalisedValue, &colour);
+        if (status != FRACTAL_SUCCESS) {
+          break;
         }
-        DrawPixel((int)x, (int)y, color);
+
+        DrawPixel((int)x, (int)y, colour);
       }
     }
     EndDrawing();
   }
-  CloseWindow();
+  free(normalisedValues);
   free(iterBuffer);
+  CloseWindow();
 }
