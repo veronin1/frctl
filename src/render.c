@@ -42,10 +42,7 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
     case FRACTAL_BURNINGSHIP:
       // do nothing
     default:
-      free(iterBuffer);
-      free(normalisedValues);
-      CloseWindow();
-      return;
+      goto cleanup;
   }
 
   normaliseIterations(iterBuffer, length, normalisedValues);
@@ -57,16 +54,16 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
         float normalisedValue = normalisedValues[y * cfg->width + x];
         Color colour;
 
-        int status = mapIterationToColor(normalisedValue, &colour);
-        if (status != FRACTAL_SUCCESS) {
-          break;
+        if (mapIterationToColor(normalisedValue, &colour) != FRACTAL_SUCCESS) {
+          goto cleanup;
         }
-
         DrawPixel((int)x, (int)y, colour);
       }
     }
     EndDrawing();
   }
+
+cleanup:
   free(normalisedValues);
   free(iterBuffer);
   CloseWindow();
