@@ -18,8 +18,13 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   InitWindow((int)cfg->width, (int)cfg->height, cfg->title);
   SetTargetFPS(cfg->maxFPS);
 
+  size_t length = cfg->width * cfg->height;
+
+  float* normalisedValues = malloc(length * sizeof(float));
   uint16_t* iterBuffer = calloc(cfg->width * cfg->height, sizeof(uint16_t));
-  if (!iterBuffer) {
+  if (!normalisedValues || !iterBuffer) {
+    free(iterBuffer);
+    free(normalisedValues);
     CloseWindow();
     return;
   }
@@ -32,16 +37,11 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
     newton(fractal, cfg->width, cfg->height, iterBuffer);
   } else {
     free(iterBuffer);
+    free(normalisedValues);
     CloseWindow();
     return;
   }
 
-  size_t length = cfg->width * cfg->height;
-
-  float* normalisedValues = malloc(length * sizeof(float));
-  if (!normalisedValues) {
-    return;
-  }
   normaliseIterations(iterBuffer, length, normalisedValues);
 
   while (!WindowShouldClose()) {
