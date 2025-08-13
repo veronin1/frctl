@@ -46,9 +46,15 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   }
 
   normaliseIterations(iterBuffer, length, normalisedValues);
+  Vector2 mousePos = GetMousePosition();
 
   while (!WindowShouldClose()) {
     BeginDrawing();
+
+    do {
+      DrawRectangle(int posX, int posY, 1, 1, WHITE)
+    } while (IsMouseButtonPressed(MOUSE_BUTTON_LEFT));
+
     for (size_t y = 0; y < cfg->height; ++y) {
       for (size_t x = 0; x < cfg->width; ++x) {
         float normalisedValue = normalisedValues[y * cfg->width + x];
