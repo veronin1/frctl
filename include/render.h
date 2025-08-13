@@ -12,8 +12,8 @@ typedef struct {
 } RenderConfig;
 
 void RenderFractal(const RenderConfig *cfg, Fractal *fractal);
-double CartesianXToComplex(Fractal* fractal, size_t width, int pixelX);
-double CartesianYToComplex(Fractal* fractal, size_t height, int pixelY);
+double CartesianXToComplex(Fractal* fractal,  RenderConfig *cfg, int pixelX);
+double CartesianYToComplex(Fractal* fractal,  RenderConfig *cfg, int pixelY);
 
 
 #endif // RENDER_H
