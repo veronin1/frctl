@@ -92,7 +92,7 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
       fractal->minImag = fractalCenterY - fractalHeight / 2.0;
       fractal->maxImag = fractalCenterY + fractalHeight / 2.0;
 
-      mandelbrot(fractal, cfg->width, cfg->height, iterBuffer);
+      julia(fractal, cfg->width, cfg->height, iterBuffer);
       normaliseIterations(iterBuffer, length, normalisedValues);
     }
 
