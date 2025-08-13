@@ -6,6 +6,7 @@
 #include "newton.h"
 #include "status_codes.h"
 
+#include <math.h>
 #include <raylib.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -71,19 +72,20 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
 
       double centerX = ((double)clickStart.x + (double)currentPos.x) / 2.0;
       double centerY = ((double)clickStart.y + (double)currentPos.y) / 2.0;
+      double fractalCenterX = CartesianXToComplex(fractal, cfg, centerX);
+      double fractalCenterY = CartesianYToComplex(fractal, cfg, centerY);
 
-      int selectionWidth = (int)currentPos.x - (int)clickStart.x;
-      int selectionHeight = (int)currentPos.y - (int)clickStart.y;
+      double fractalX1 =
+          CartesianXToComplex(fractal, cfg, (double)clickStart.x);
+      double fractalX2 =
+          CartesianXToComplex(fractal, cfg, (double)currentPos.x);
+      double fractalWidth = fabs(fractalX2 - fractalX1);
 
-      double newCenterX = CartesianXToComplex(fractal, cfg, centerX);
-      double newCenterY = CartesianYToComplex(fractal, cfg, centerY);
-
-      fractal->maxReal =
-          CartesianXToComplex(fractal, cfg, (double)selectionWidth / 2);
-      fractal->minReal = CartesianXToComplex(fractal, cfg, selectionWidth);
-      fractal->minImag =
-          CartesianYToComplex(fractal, cfg, (double)selectionHeight / 2);
-      fractal->maxImag = CartesianYToComplex(fractal, cfg, selectionHeight);
+      double fractalY1 =
+          CartesianYToComplex(fractal, cfg, (double)clickStart.y);
+      double fractalY2 =
+          CartesianYToComplex(fractal, cfg, (double)currentPos.y);
+      double fractalHeight = fabs(fractalY2 - fractalY1);
 
       mandelbrot(fractal, cfg->width, cfg->height, iterBuffer);
     }
