@@ -51,9 +51,13 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   while (!WindowShouldClose()) {
     BeginDrawing();
 
-    do {
-      DrawRectangle(int posX, int posY, 1, 1, WHITE)
-    } while (IsMouseButtonPressed(MOUSE_BUTTON_LEFT));
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+      mousePos = GetMousePosition();
+    }
+
+    while (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+      DrawRectangle((int)mousePos.x, (int)mousePos.y, 1, 1, PINK);
+    }
 
     for (size_t y = 0; y < cfg->height; ++y) {
       for (size_t x = 0; x < cfg->width; ++x) {
