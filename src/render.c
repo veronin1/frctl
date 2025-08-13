@@ -68,9 +68,13 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
 
     if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
       selecting = false;
-      double newCenterX = CartesianXToComplex(fractal, size_t width,
-                                              int pixelX) double newCenterY =
-          ((double)clickStart.y + (double)currentPos.y) / 2.0;
+
+      double centerX = ((double)clickStart.x + (double)currentPos.x) / 2.0;
+      double centerY = ((double)clickStart.y + (double)currentPos.y) / 2.0;
+
+      double newCenterX = CartesianXToComplex(fractal, cfg, (int)centerX);
+      double newCenterY = CartesianYToComplex(fractal, cfg, (int)centerY);
+
       fractal->minReal = (double)clickStart.x;
 
       mandelbrot(fractal, cfg->width, cfg->height, iterBuffer);
@@ -96,12 +100,14 @@ cleanup:
   CloseWindow();
 }
 
-double CartesianXToComplex(Fractal* fractal, RenderConfig* cfg, int pixelX) {
+double CartesianXToComplex(Fractal* fractal, const RenderConfig* cfg,
+                           int pixelX) {
   return fractal->minReal + ((double)pixelX / (double)cfg->width) *
                                 (fractal->maxReal - fractal->minReal);
 }
 
-double CartesianYToComplex(Fractal* fractal, RenderConfig* cfg, int pixelY) {
+double CartesianYToComplex(Fractal* fractal, const RenderConfig* cfg,
+                           int pixelY) {
   return fractal->minImag + ((double)pixelY / (double)cfg->height) *
                                 (fractal->maxImag - fractal->minImag);
 }
