@@ -87,7 +87,13 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
           CartesianYToComplex(fractal, cfg, (double)currentPos.y);
       double fractalHeight = fabs(fractalY2 - fractalY1);
 
+      fractal->minReal = fractalCenterX - fractalWidth / 2.0;
+      fractal->maxReal = fractalCenterX + fractalWidth / 2.0;
+      fractal->minImag = fractalCenterY - fractalHeight / 2.0;
+      fractal->maxImag = fractalCenterY + fractalHeight / 2.0;
+
       mandelbrot(fractal, cfg->width, cfg->height, iterBuffer);
+      normaliseIterations(iterBuffer, length, normalisedValues);
     }
 
     for (size_t y = 0; y < cfg->height; ++y) {
