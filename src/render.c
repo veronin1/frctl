@@ -72,10 +72,18 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
       double centerX = ((double)clickStart.x + (double)currentPos.x) / 2.0;
       double centerY = ((double)clickStart.y + (double)currentPos.y) / 2.0;
 
+      int selectionWidth = (int)currentPos.x - (int)clickStart.x;
+      int selectionHeight = (int)currentPos.y - (int)clickStart.y;
+
       double newCenterX = CartesianXToComplex(fractal, cfg, centerX);
       double newCenterY = CartesianYToComplex(fractal, cfg, centerY);
 
-      fractal->minReal = (double)clickStart.x;
+      fractal->maxReal =
+          CartesianXToComplex(fractal, cfg, (double)selectionWidth / 2);
+      fractal->minReal = CartesianXToComplex(fractal, cfg, selectionWidth);
+      fractal->minImag =
+          CartesianYToComplex(fractal, cfg, (double)selectionHeight / 2);
+      fractal->maxImag = CartesianYToComplex(fractal, cfg, selectionHeight);
 
       mandelbrot(fractal, cfg->width, cfg->height, iterBuffer);
     }
