@@ -72,8 +72,8 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
       double centerX = ((double)clickStart.x + (double)currentPos.x) / 2.0;
       double centerY = ((double)clickStart.y + (double)currentPos.y) / 2.0;
 
-      double newCenterX = CartesianXToComplex(fractal, cfg, (int)centerX);
-      double newCenterY = CartesianYToComplex(fractal, cfg, (int)centerY);
+      double newCenterX = CartesianXToComplex(fractal, cfg, centerX);
+      double newCenterY = CartesianYToComplex(fractal, cfg, centerY);
 
       fractal->minReal = (double)clickStart.x;
 
@@ -101,13 +101,13 @@ cleanup:
 }
 
 double CartesianXToComplex(Fractal* fractal, const RenderConfig* cfg,
-                           int pixelX) {
+                           double pixelX) {
   return fractal->minReal + ((double)pixelX / (double)cfg->width) *
                                 (fractal->maxReal - fractal->minReal);
 }
 
 double CartesianYToComplex(Fractal* fractal, const RenderConfig* cfg,
-                           int pixelY) {
+                           double pixelY) {
   return fractal->minImag + ((double)pixelY / (double)cfg->height) *
                                 (fractal->maxImag - fractal->minImag);
 }
