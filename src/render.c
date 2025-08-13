@@ -61,13 +61,13 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
     if (selecting) {
       Vector2 currentPos = GetMousePosition();
       DrawRectangleLines((int)clickStart.x, (int)clickStart.y,
-                         currentPos.x - clickStart.x,
-                         currentPos.y - clickStart.y, PINK);
+                         (int)currentPos.x - (int)clickStart.x,
+                         (int)currentPos.y - (int)clickStart.y, PINK);
     }
 
-    while (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-      DrawRectangle((int)mousePos.x, (int)mousePos.y, 1, 1, PINK);
-      mousePos = GetMousePosition();
+    if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+      selecting = false;
+      mandelbrot(fractal, cfg->width, cfg->height, iterBuffer);
     }
 
     for (size_t y = 0; y < cfg->height; ++y) {
