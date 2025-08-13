@@ -15,5 +15,4 @@ void RenderFractal(const RenderConfig *cfg, Fractal *fractal);
 double CartesianXToComplex(Fractal* fractal,  const RenderConfig *cfg, double pixelX);
 double CartesianYToComplex(Fractal* fractal,  const RenderConfig *cfg, double pixelY);
 
-
 #endif // RENDER_H
