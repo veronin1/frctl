@@ -48,6 +48,7 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   normaliseIterations(iterBuffer, length, normalisedValues);
   Vector2 clickStart = {0};
   bool selecting = false;
+  Vector2 currentPos = {0};
 
   while (!WindowShouldClose()) {
     BeginDrawing();
@@ -59,7 +60,7 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
     }
 
     if (selecting) {
-      Vector2 currentPos = GetMousePosition();
+      currentPos = GetMousePosition();
       DrawRectangleLines((int)clickStart.x, (int)clickStart.y,
                          (int)currentPos.x - (int)clickStart.x,
                          (int)currentPos.y - (int)clickStart.y, PINK);
@@ -67,6 +68,10 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
 
     if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
       selecting = false;
+      double centerX = ((double)clickStart.x + (double)currentPos.x) / 2.0;
+      double centerY = ((double)clickStart.y + (double)currentPos.y) / 2.0;
+      fractal->minReal = (double)clickStart.x;
+
       mandelbrot(fractal, cfg->width, cfg->height, iterBuffer);
     }
 
@@ -89,3 +94,10 @@ cleanup:
   free(iterBuffer);
   CloseWindow();
 }
+
+double CartesianXToComplex(Fractal* fractal, size_t width, int pixelX) {
+  return fractal->minReal + ((double)pixelX / (double)width) *
+                                (fractal->maxReal - fractal->minReal);
+}
+
+double CartesianYToComplex(Fractal* fractal, size_t height, int pixelY) {
