@@ -33,11 +33,11 @@ int main(void) {
   if (!fractal) {
     return 1;
   }
-  fractal->type = FRACTAL_MANDELBROT;
+  fractal->type = FRACTAL_NEWTON;
   fractal->minReal = -2.0;
-  fractal->maxReal = 1.0;
-  fractal->minImag = -1.5;
-  fractal->maxImag = 1.5;
+  fractal->maxReal = 2.0;
+  fractal->minImag = -2.0;
+  fractal->maxImag = 2.0;
   fractal->maxIter = 1000;
 
   RenderConfig* cfg = malloc(sizeof(RenderConfig));
