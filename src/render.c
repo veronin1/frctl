@@ -118,7 +118,7 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
         if (mapIterationToColor(normalisedValue, &colour) != FRACTAL_SUCCESS) {
           goto cleanup;
         }
-        DrawPixel((int)x, (int)y, colour);
+        ((Color*)img.data)[y * cfg->width + x] = colour;
       }
     }
     EndDrawing();
