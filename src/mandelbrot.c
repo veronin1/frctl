@@ -1,12 +1,10 @@
 #include "mandelbrot.h"
 #include "fractal.h"
 #include "status_codes.h"
+#include "utils.h"
 
 #include <complex.h>
 #include <stdlib.h>
-#include "render.h"
-
-#define MIN(a, b) ((a) < (b) ? (a) : (b))
 
 int mandelbrot_tile(const Fractal* fractal, const Tile* tile,
                     uint16_t* iterBuffer, size_t imageWidth,

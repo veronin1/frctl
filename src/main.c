@@ -47,9 +47,9 @@ int main(void) {
     return 1;
   }
   cfg->height = 1440;
-  cfg->width = 2560;
+  cfg->width = 1440;
   cfg->title = "frctl";
-  cfg->maxFPS = 60;
+  cfg->maxFPS = 3000;
 
   RenderFractal(cfg, fractal);
 

@@ -213,12 +213,12 @@ void* worker(WorkerArgs* args) {
                         args->imageWidth, args->imageHeight);
         break;
       case FRACTAL_JULIA:
-        julia(args->fractal, tile.startX + 32, tile.startY + 32,
-              args->iterBuffer);
+        julia_tile(args->fractal, &tile, args->iterBuffer, args->imageWidth,
+                   args->imageHeight);
         break;
       case FRACTAL_NEWTON:
-        newton(args->fractal, tile.startX + 32, tile.startY + 32,
-               args->iterBuffer);
+        newton_tile(args->fractal, &tile, args->iterBuffer, args->imageWidth,
+                    args->imageHeight);
         break;
       default:
         break;
