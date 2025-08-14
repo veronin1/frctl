@@ -48,6 +48,10 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   bool selecting = false;
   Vector2 currentPos = {0};
 
+  Image img = GenImageColor((int)cfg->width, (int)cfg->height, BLACK);
+  Texture2D tex = LoadTextureFromImage(img);
+  UnloadImage(img);
+
   while (!WindowShouldClose()) {
     BeginDrawing();
     ClearBackground(BLACK);
@@ -119,6 +123,8 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
     }
     EndDrawing();
   }
+
+  UnloadTexture(tex);
 
 cleanup:
   free(normalisedValues);
