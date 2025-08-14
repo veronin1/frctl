@@ -78,8 +78,8 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   tQueue->count = (int)totalTiles;
   pthread_mutex_init(&tQueue->lock, NULL);
 
-  long max_threads = sysconf(_SC_THREAD_THREADS_MAX);
-  if (max_threads == -1) {
+  long cores = sysconf(_SC_NPROCESSORS_ONLN);
+  if (cores == 0) {
     goto cleanup;
   }
 
