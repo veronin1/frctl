@@ -51,6 +51,10 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   Image img = GenImageColor((int)cfg->width, (int)cfg->height, BLACK);
   Texture2D tex = LoadTextureFromImage(img);
 
+  double tilesX = ceil((double)cfg->width / 32);
+  double tilesY = ceil((double)cfg->height / 32);
+  double totalTiles = tilesX * tilesY;
+
   while (!WindowShouldClose()) {
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
       clickStart = GetMousePosition();
