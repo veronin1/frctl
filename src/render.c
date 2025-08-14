@@ -55,6 +55,18 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   double tilesY = ceil((double)cfg->height / 32);
   double totalTiles = tilesX * tilesY;
 
+  Tile* tiles = malloc((unsigned long)totalTiles * sizeof(Tile));
+  TileQueue* tQueue = malloc(sizeof(TileQueue));
+  if (!tiles || !tQueue) {
+    goto cleanup;
+  }
+
+  for (size_t y = 0; y < (size_t)tilesY; ++y) {
+    for (size_t x = 0; x < (size_t)tilesX; ++x) {
+      size_t index = y * (size_t)tilesX + x;
+    }
+  }
+
   while (!WindowShouldClose()) {
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
       clickStart = GetMousePosition();
