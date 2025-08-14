@@ -124,7 +124,6 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
       DrawTexture(tex, 0, 0, WHITE);
       EndDrawing();
     }
-    EndDrawing();
   }
 
   UnloadTexture(tex);
