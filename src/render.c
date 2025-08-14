@@ -23,8 +23,14 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
 
   size_t length = cfg->width * cfg->height;
 
-  float* normalisedValues = malloc(length * sizeof(float));
-  uint16_t* iterBuffer = calloc(cfg->width * cfg->height, sizeof(uint16_t));
+  float* normalisedValues = NULL;
+  uint16_t* iterBuffer = NULL;
+  Tile* tiles = NULL;
+  TileQueue* tQueue = NULL;
+  pthread_t* threads = NULL;
+
+  normalisedValues = malloc(length * sizeof(float));
+  iterBuffer = calloc(cfg->width * cfg->height, sizeof(uint16_t));
   if (!normalisedValues || !iterBuffer) {
     goto cleanup;
   }
@@ -57,8 +63,8 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   size_t tilesY = (cfg->height + 31) / 32;
   size_t totalTiles = tilesX * tilesY;
 
-  Tile* tiles = malloc((unsigned long)totalTiles * sizeof(Tile));
-  TileQueue* tQueue = malloc(sizeof(TileQueue));
+  tiles = malloc((unsigned long)totalTiles * sizeof(Tile));
+  tQueue = malloc(sizeof(TileQueue));
   if (!tiles || !tQueue) {
     goto cleanup;
   }
@@ -83,7 +89,7 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
     goto cleanup;
   }
 
-  pthread_t* threads = malloc(sizeof(pthread_t) * (unsigned long)cores);
+  threads = malloc(sizeof(pthread_t) * (unsigned long)cores);
 
   while (!WindowShouldClose()) {
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
@@ -168,6 +174,9 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
 cleanup:
   free(normalisedValues);
   free(iterBuffer);
+  free(tQueue);
+  free(tiles);
+  free(threads);
   CloseWindow();
 }
 
