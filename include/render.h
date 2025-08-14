@@ -3,6 +3,7 @@
 
 #include "fractal.h"
 
+#include <bits/pthreadtypes.h>
 #include <stdlib.h>
 
 typedef struct {
@@ -15,6 +16,13 @@ typedef struct {
   int startX, startY;
   int width, height;
 } Tile;
+
+typedef struct TileQueue {
+  Tile* Tiles;
+  int count;
+  int next;
+  pthread_mutex_t lock;
+} TileQueue;
 
 void RenderFractal(const RenderConfig *cfg, Fractal *fractal);
 double CartesianXToComplex(Fractal* fractal,  const RenderConfig *cfg, double pixelX);
