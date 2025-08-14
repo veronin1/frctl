@@ -1,9 +1,30 @@
 #include "mandelbrot.h"
 #include "fractal.h"
 #include "status_codes.h"
+#include "utils.h"
 
 #include <complex.h>
 #include <stdlib.h>
+
+int mandelbrot_tile(const Fractal* fractal, const Tile* tile,
+                    uint16_t* iterBuffer, size_t imageWidth,
+                    size_t imageHeight) {
+  if (!fractal || !iterBuffer || !tile) {
+    return FRACTAL_ERR_NULL_POINTER;
+  }
+
+  size_t endX = MIN(tile->startX + tile->width, imageWidth);
+  size_t endY = MIN(tile->startY + tile->height, imageHeight);
+
+  for (size_t py = tile->startY; py < endY; ++py) {
+    for (size_t px = tile->startX; px < endX; ++px) {
+      iterBuffer[py * imageWidth + px] =
+          mandelbrot_iter(fractal, px, py, imageWidth, imageHeight);
+    }
+  }
+
+  return FRACTAL_SUCCESS;
+}
 
 // Mandelbrot set: z_{n+1} = z_n^2 + c
 int mandelbrot(const Fractal* fractal, const size_t width, const size_t height,

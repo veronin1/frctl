@@ -7,9 +7,11 @@
 #include "status_codes.h"
 
 #include <math.h>
+#include <pthread.h>
 #include <raylib.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   if (!cfg || !fractal) {
@@ -21,8 +23,14 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
 
   size_t length = cfg->width * cfg->height;
 
-  float* normalisedValues = malloc(length * sizeof(float));
-  uint16_t* iterBuffer = calloc(cfg->width * cfg->height, sizeof(uint16_t));
+  float* normalisedValues = NULL;
+  uint16_t* iterBuffer = NULL;
+  Tile* tiles = NULL;
+  TileQueue* tQueue = NULL;
+  pthread_t* threads = NULL;
+
+  normalisedValues = malloc(length * sizeof(float));
+  iterBuffer = calloc(cfg->width * cfg->height, sizeof(uint16_t));
   if (!normalisedValues || !iterBuffer) {
     goto cleanup;
   }
@@ -48,10 +56,42 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   bool selecting = false;
   Vector2 currentPos = {0};
 
-  while (!WindowShouldClose()) {
-    BeginDrawing();
-    ClearBackground(BLACK);
+  Image img = GenImageColor((int)cfg->width, (int)cfg->height, BLACK);
+  Texture2D tex = LoadTextureFromImage(img);
 
+  size_t tilesX = (cfg->width + 31) / 32;
+  size_t tilesY = (cfg->height + 31) / 32;
+  size_t totalTiles = tilesX * tilesY;
+
+  tiles = malloc((unsigned long)totalTiles * sizeof(Tile));
+  tQueue = malloc(sizeof(TileQueue));
+  if (!tiles || !tQueue) {
+    goto cleanup;
+  }
+
+  for (size_t y = 0; y < tilesY; ++y) {
+    for (size_t x = 0; x < tilesX; ++x) {
+      size_t index = y * tilesX + x;
+      tiles[index].height = 32;
+      tiles[index].width = 32;
+      tiles[index].startX = x * 32;
+      tiles[index].startY = y * 32;
+    }
+  }
+
+  tQueue->Tiles = tiles;
+  tQueue->next = 0;
+  tQueue->count = totalTiles;
+  pthread_mutex_init(&tQueue->lock, NULL);
+
+  long cores = sysconf(_SC_NPROCESSORS_ONLN);
+  if (cores <= 0) {
+    cores = 1;
+  }
+
+  threads = malloc(sizeof(pthread_t) * (unsigned long)cores);
+
+  while (!WindowShouldClose()) {
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
       clickStart = GetMousePosition();
       selecting = true;
@@ -89,18 +129,24 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
       fractal->minImag = fractalCenterY - fractalHeight / 2.0;
       fractal->maxImag = fractalCenterY + fractalHeight / 2.0;
 
-      switch (fractal->type) {
-        case FRACTAL_MANDELBROT:
-          mandelbrot(fractal, cfg->width, cfg->height, iterBuffer);
-          break;
-        case FRACTAL_JULIA:
-          julia(fractal, cfg->width, cfg->height, iterBuffer);
-          break;
-        case FRACTAL_NEWTON:
-          newton(fractal, cfg->width, cfg->height, iterBuffer);
-          break;
-        default:
+      WorkerArgs* args = malloc(sizeof(WorkerArgs));
+      args->queue = tQueue;
+      args->fractal = fractal;
+      args->iterBuffer = iterBuffer;
+      tQueue->next = 0;
+      args->imageHeight = (size_t)img.height;
+      args->imageWidth = (size_t)img.width;
+
+      for (size_t i = 0; i < (size_t)cores; ++i) {
+        int rc =
+            pthread_create(&threads[i], NULL, (void* (*)(void*))worker, args);
+        if (rc != 0) {
           goto cleanup;
+        }
+      }
+
+      for (size_t i = 0; i < (size_t)cores; ++i) {
+        pthread_join(threads[i], NULL);
       }
 
       normaliseIterations(iterBuffer, length, normalisedValues);
@@ -114,15 +160,26 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
         if (mapIterationToColor(normalisedValue, &colour) != FRACTAL_SUCCESS) {
           goto cleanup;
         }
-        DrawPixel((int)x, (int)y, colour);
+        ((Color*)img.data)[y * cfg->width + x] = colour;
       }
     }
+    UpdateTexture(tex, img.data);
+
+    BeginDrawing();
+    ClearBackground(BLACK);
+    DrawTexture(tex, 0, 0, WHITE);
     EndDrawing();
   }
+
+  UnloadTexture(tex);
+  UnloadImage(img);
 
 cleanup:
   free(normalisedValues);
   free(iterBuffer);
+  free(tQueue);
+  free(tiles);
+  free(threads);
   CloseWindow();
 }
 
@@ -136,4 +193,36 @@ double CartesianYToComplex(Fractal* fractal, const RenderConfig* cfg,
                            double pixelY) {
   return fractal->minImag + ((double)pixelY / (double)cfg->height) *
                                 (fractal->maxImag - fractal->minImag);
+}
+
+void* worker(WorkerArgs* args) {
+  while (true) {
+    pthread_mutex_lock(&args->queue->lock);
+    if (args->queue->next >= args->queue->count) {
+      pthread_mutex_unlock(&args->queue->lock);
+      break;
+    }
+
+    const Tile tile = args->queue->Tiles[args->queue->next];
+    args->queue->next++;
+    pthread_mutex_unlock(&args->queue->lock);
+
+    switch (args->fractal->type) {
+      case FRACTAL_MANDELBROT:
+        mandelbrot_tile(args->fractal, &tile, args->iterBuffer,
+                        args->imageWidth, args->imageHeight);
+        break;
+      case FRACTAL_JULIA:
+        julia_tile(args->fractal, &tile, args->iterBuffer, args->imageWidth,
+                   args->imageHeight);
+        break;
+      case FRACTAL_NEWTON:
+        newton_tile(args->fractal, &tile, args->iterBuffer, args->imageWidth,
+                    args->imageHeight);
+        break;
+      default:
+        break;
+    }
+  }
+  return NULL;
 }
