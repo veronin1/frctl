@@ -85,8 +85,8 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   pthread_mutex_init(&tQueue->lock, NULL);
 
   long cores = sysconf(_SC_NPROCESSORS_ONLN);
-  if (cores == 0) {
-    goto cleanup;
+  if (cores <= 0) {
+    cores = 1;
   }
 
   threads = malloc(sizeof(pthread_t) * (unsigned long)cores);
@@ -133,12 +133,13 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
       args->queue = tQueue;
       args->fractal = fractal;
       args->iterBuffer = iterBuffer;
+      tQueue->next = 0;
 
       for (size_t i = 0; i < (size_t)cores; ++i) {
         int rc =
             pthread_create(&threads[i], NULL, (void* (*)(void*))worker, args);
         if (rc != 0) {
-          return;
+          goto cleanup;
         }
       }
 
