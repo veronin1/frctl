@@ -30,11 +30,14 @@ typedef struct {
    RenderConfig* cfg;
    uint16_t* iterBuffer;
    TileQueue* queue;
+  size_t imageWidth;
+  size_t imageHeight;
 } WorkerArgs;
 
 void RenderFractal(const RenderConfig *cfg, Fractal *fractal);
 double CartesianXToComplex(Fractal* fractal,  const RenderConfig *cfg, double pixelX);
 double CartesianYToComplex(Fractal* fractal,  const RenderConfig *cfg, double pixelY);
 void* worker(WorkerArgs* args);
+
 
 #endif // RENDER_H

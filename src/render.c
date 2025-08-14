@@ -207,13 +207,17 @@ void* worker(WorkerArgs* args) {
 
     switch (args->fractal->type) {
       case FRACTAL_MANDELBROT:
-        mandelbrot(args->fractal, tile.startX, tile.startY, args->iterBuffer);
+        mandelbrot_tile(args->fractal, tile.startX, tile.startY, tile.width,
+                        tile.height, args->iterBuffer, args->imageWidth,
+                        args->imageHeight);
         break;
       case FRACTAL_JULIA:
-        julia(args->fractal, tile.startX, tile.startY, args->iterBuffer);
+        julia(args->fractal, tile.startX + 32, tile.startY + 32,
+              args->iterBuffer);
         break;
       case FRACTAL_NEWTON:
-        newton(args->fractal, tile.startX, tile.startY, args->iterBuffer);
+        newton(args->fractal, tile.startX + 32, tile.startY + 32,
+               args->iterBuffer);
         break;
       default:
         break;
