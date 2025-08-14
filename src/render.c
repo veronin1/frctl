@@ -24,10 +24,7 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   float* normalisedValues = malloc(length * sizeof(float));
   uint16_t* iterBuffer = calloc(cfg->width * cfg->height, sizeof(uint16_t));
   if (!normalisedValues || !iterBuffer) {
-    free(iterBuffer);
-    free(normalisedValues);
-    CloseWindow();
-    return;
+    goto cleanup;
   }
 
   switch (fractal->type) {
