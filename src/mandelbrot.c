@@ -4,25 +4,27 @@
 
 #include <complex.h>
 #include <stdlib.h>
+#include "render.h"
 
-int mandelbrot_tile(const Fractal* fractal, size_t startX, size_t startY,
-                    size_t tileWidth, size_t tileHeight, uint16_t* iterBuffer,
-                    size_t imageWidth, size_t imageHeight) {
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
+
+int mandelbrot_tile(const Fractal* fractal, const Tile* tile,
+                    uint16_t* iterBuffer, size_t imageWidth,
+                    size_t imageHeight) {
   if (!fractal || !iterBuffer) {
     return FRACTAL_ERR_NULL_POINTER;
   }
 
-  for (size_t y = 0; y < tileHeight; ++y) {
-    for (size_t x = 0; x < tileWidth; ++x) {
-      size_t px = startX + x;
-      size_t py = startY + y;
-      if (px >= imageWidth || py >= imageHeight) {
-        continue;
-      }
+  size_t endX = MIN(tile->startX + tile->width, imageWidth);
+  size_t endY = MIN(tile->startY + tile->height, imageHeight);
+
+  for (size_t py = tile->startY; py < endY; ++py) {
+    for (size_t px = tile->startX; px < endX; ++px) {
       iterBuffer[py * imageWidth + px] =
-          mandelbrot_iter(fractal, x, y, imageWidth, imageHeight);
+          mandelbrot_iter(fractal, px, py, imageWidth, imageHeight);
     }
   }
+
   return FRACTAL_SUCCESS;
 }
 
