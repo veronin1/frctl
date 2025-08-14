@@ -33,13 +33,12 @@ int main(void) {
   if (!fractal) {
     return 1;
   }
-
-  fractal->type = FRACTAL_NEWTON;
-  fractal->minReal = -2.0;
-  fractal->maxReal = 2.0;
-  fractal->minImag = -2.0;
-  fractal->maxImag = 2.0;
-  fractal->maxIter = 20;
+  fractal->type = FRACTAL_JULIA;
+  fractal->minReal = -1.5;
+  fractal->maxReal = 1.5;
+  fractal->minImag = -1.5;
+  fractal->maxImag = 1.5;
+  fractal->maxIter = 10000;
 
   RenderConfig* cfg = malloc(sizeof(RenderConfig));
   if (!cfg) {
@@ -49,7 +48,7 @@ int main(void) {
   cfg->height = 1440;
   cfg->width = 2560;
   cfg->title = "frctl";
-  cfg->maxFPS = 60;
+  cfg->maxFPS = 300;
 
   RenderFractal(cfg, fractal);
 
