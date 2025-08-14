@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 int mandelbrot_tile(const Fractal* fractal, size_t startX, size_t startY,
-                    size_t tileWidth, size_t tileHeight, size_t* iterBuffer,
+                    size_t tileWidth, size_t tileHeight, uint16_t* iterBuffer,
                     size_t imageWidth, size_t imageHeight) {
   if (!fractal || !iterBuffer) {
     return FRACTAL_ERR_NULL_POINTER;
