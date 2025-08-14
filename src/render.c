@@ -50,7 +50,6 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
 
   Image img = GenImageColor((int)cfg->width, (int)cfg->height, BLACK);
   Texture2D tex = LoadTextureFromImage(img);
-  UnloadImage(img);
 
   while (!WindowShouldClose()) {
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
@@ -117,16 +116,17 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
         }
         ((Color*)img.data)[y * cfg->width + x] = colour;
       }
-      UpdateTexture(tex, img.data);
-
-      BeginDrawing();
-      ClearBackground(BLACK);
-      DrawTexture(tex, 0, 0, WHITE);
-      EndDrawing();
     }
+    UpdateTexture(tex, img.data);
+
+    BeginDrawing();
+    ClearBackground(BLACK);
+    DrawTexture(tex, 0, 0, WHITE);
+    EndDrawing();
   }
 
   UnloadTexture(tex);
+  UnloadImage(img);
 
 cleanup:
   free(normalisedValues);
