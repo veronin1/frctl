@@ -5,6 +5,27 @@
 #include <complex.h>
 #include <stdlib.h>
 
+int mandelbrot_tile(const Fractal* fractal, size_t startX, size_t startY,
+                    size_t tileWidth, size_t tileHeight, size_t* iterBuffer,
+                    size_t imageWidth, size_t imageHeight) {
+  if (!fractal || !iterBuffer) {
+    return FRACTAL_ERR_NULL_POINTER;
+  }
+
+  for (size_t y = 0; y < tileHeight; ++y) {
+    for (size_t x = 0; x < tileWidth; ++x) {
+      size_t px = startX + x;
+      size_t py = startY + y;
+      if (px >= imageWidth || py >= imageHeight) {
+        continue;
+      }
+      iterBuffer[py * imageWidth + px] =
+          mandelbrot_iter(fractal, x, y, imageWidth, imageHeight);
+    }
+  }
+  return FRACTAL_SUCCESS;
+}
+
 // Mandelbrot set: z_{n+1} = z_n^2 + c
 int mandelbrot(const Fractal* fractal, const size_t width, const size_t height,
                uint16_t* iterBuffer) {
