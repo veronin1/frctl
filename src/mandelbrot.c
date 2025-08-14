@@ -11,7 +11,7 @@
 int mandelbrot_tile(const Fractal* fractal, const Tile* tile,
                     uint16_t* iterBuffer, size_t imageWidth,
                     size_t imageHeight) {
-  if (!fractal || !iterBuffer) {
+  if (!fractal || !iterBuffer || !tile) {
     return FRACTAL_ERR_NULL_POINTER;
   }
 

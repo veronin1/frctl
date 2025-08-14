@@ -134,6 +134,8 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
       args->fractal = fractal;
       args->iterBuffer = iterBuffer;
       tQueue->next = 0;
+      args->imageHeight = (size_t)img.height;
+      args->imageWidth = (size_t)img.width;
 
       for (size_t i = 0; i < (size_t)cores; ++i) {
         int rc =
@@ -201,15 +203,14 @@ void* worker(WorkerArgs* args) {
       break;
     }
 
-    Tile tile = args->queue->Tiles[args->queue->next];
+    const Tile tile = args->queue->Tiles[args->queue->next];
     args->queue->next++;
     pthread_mutex_unlock(&args->queue->lock);
 
     switch (args->fractal->type) {
       case FRACTAL_MANDELBROT:
-        mandelbrot_tile(args->fractal, tile.startX, tile.startY, tile.width,
-                        tile.height, args->iterBuffer, args->imageWidth,
-                        args->imageHeight);
+        mandelbrot_tile(args->fractal, &tile, args->iterBuffer,
+                        args->imageWidth, args->imageHeight);
         break;
       case FRACTAL_JULIA:
         julia(args->fractal, tile.startX + 32, tile.startY + 32,
