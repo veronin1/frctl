@@ -7,9 +7,11 @@
 #include "status_codes.h"
 
 #include <math.h>
+#include <pthread.h>
 #include <raylib.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   if (!cfg || !fractal) {
@@ -64,8 +66,24 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   for (size_t y = 0; y < (size_t)tilesY; ++y) {
     for (size_t x = 0; x < (size_t)tilesX; ++x) {
       size_t index = y * (size_t)tilesX + x;
+      tiles[index].height = tilesY;
+      tiles[index].width = tilesX;
+      tiles[index].startX = x;
+      tiles[index].startY = y;
     }
   }
+
+  tQueue->Tiles = tiles;
+  tQueue->next = 0;
+  tQueue->count = (int)totalTiles;
+  pthread_mutex_init(&tQueue->lock, NULL);
+
+  long max_threads = sysconf(_SC_THREAD_THREADS_MAX);
+  if (max_threads == -1) {
+    goto cleanup;
+  }
+
+  pthread_mutex_destroy(&tQueue->lock);
 
   while (!WindowShouldClose()) {
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {

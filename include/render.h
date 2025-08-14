@@ -3,7 +3,7 @@
 
 #include "fractal.h"
 
-#include <bits/pthreadtypes.h>
+#include <pthread.h>
 #include <stdlib.h>
 
 typedef struct {
