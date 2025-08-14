@@ -123,20 +123,21 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
       fractal->minImag = fractalCenterY - fractalHeight / 2.0;
       fractal->maxImag = fractalCenterY + fractalHeight / 2.0;
 
+      WorkerArgs* args = malloc(sizeof(WorkerArgs));
+      args->queue = tQueue;
+      args->fractal = fractal;
+      args->iterBuffer = iterBuffer;
+
       for (size_t i = 0; i < (size_t)cores; ++i) {
-        switch (fractal->type) {
-          case FRACTAL_MANDELBROT:
-            mandelbrot(fractal, cfg->width, cfg->height, iterBuffer);
-            break;
-          case FRACTAL_JULIA:
-            julia(fractal, cfg->width, cfg->height, iterBuffer);
-            break;
-          case FRACTAL_NEWTON:
-            newton(fractal, cfg->width, cfg->height, iterBuffer);
-            break;
-          default:
-            goto cleanup;
+        int rc =
+            pthread_create(&threads[i], NULL, (void* (*)(void*))worker, args);
+        if (rc != 0) {
+          return;
         }
+      }
+
+      for (size_t i = 0; i < (size_t)cores; ++i) {
+        pthread_join(threads[i], NULL);
       }
 
       normaliseIterations(iterBuffer, length, normalisedValues);
