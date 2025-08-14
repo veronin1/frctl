@@ -11,6 +11,11 @@ typedef struct {
     int maxFPS;
 } RenderConfig;
 
+typedef struct {
+  int startX, startY;
+  int width, height;
+} Tile;
+
 void RenderFractal(const RenderConfig *cfg, Fractal *fractal);
 double CartesianXToComplex(Fractal* fractal,  const RenderConfig *cfg, double pixelX);
 double CartesianYToComplex(Fractal* fractal,  const RenderConfig *cfg, double pixelY);
