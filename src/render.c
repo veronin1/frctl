@@ -53,9 +53,6 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   UnloadImage(img);
 
   while (!WindowShouldClose()) {
-    BeginDrawing();
-    ClearBackground(BLACK);
-
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
       clickStart = GetMousePosition();
       selecting = true;
@@ -120,6 +117,12 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
         }
         ((Color*)img.data)[y * cfg->width + x] = colour;
       }
+      UpdateTexture(tex, img.data);
+
+      BeginDrawing();
+      ClearBackground(BLACK);
+      DrawTexture(tex, 0, 0, WHITE);
+      EndDrawing();
     }
     EndDrawing();
   }
