@@ -13,14 +13,14 @@ typedef struct {
 } RenderConfig;
 
 typedef struct {
-  int startX, startY;
-  int width, height;
+  size_t startX, startY;
+  size_t width, height;
 } Tile;
 
 typedef struct TileQueue {
   Tile* Tiles;
-  int count;
-  int next;
+  size_t count;
+  size_t  next;
   pthread_mutex_t lock;
 } TileQueue;
 

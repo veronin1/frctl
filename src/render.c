@@ -53,9 +53,9 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   Image img = GenImageColor((int)cfg->width, (int)cfg->height, BLACK);
   Texture2D tex = LoadTextureFromImage(img);
 
-  double tilesX = ceil((double)cfg->width / 32);
-  double tilesY = ceil((double)cfg->height / 32);
-  double totalTiles = tilesX * tilesY;
+  size_t tilesX = (cfg->width + 31) / 32;
+  size_t tilesY = (cfg->height + 31) / 32;
+  size_t totalTiles = tilesX * tilesY;
 
   Tile* tiles = malloc((unsigned long)totalTiles * sizeof(Tile));
   TileQueue* tQueue = malloc(sizeof(TileQueue));
@@ -63,11 +63,11 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
     goto cleanup;
   }
 
-  for (size_t y = 0; y < (size_t)tilesY; ++y) {
-    for (size_t x = 0; x < (size_t)tilesX; ++x) {
-      size_t index = y * (size_t)tilesX + x;
-      tiles[index].height = tilesY;
-      tiles[index].width = tilesX;
+  for (size_t y = 0; y < tilesY; ++y) {
+    for (size_t x = 0; x < tilesX; ++x) {
+      size_t index = y * tilesX + x;
+      tiles[index].height = 32;
+      tiles[index].width = 32;
       tiles[index].startX = x;
       tiles[index].startY = y;
     }
@@ -75,7 +75,7 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
 
   tQueue->Tiles = tiles;
   tQueue->next = 0;
-  tQueue->count = (int)totalTiles;
+  tQueue->count = totalTiles;
   pthread_mutex_init(&tQueue->lock, NULL);
 
   long cores = sysconf(_SC_NPROCESSORS_ONLN);
