@@ -24,8 +24,16 @@ typedef struct TileQueue {
   pthread_mutex_t lock;
 } TileQueue;
 
+typedef struct {
+   Fractal* fractal;
+   RenderConfig* cfg;
+   uint16_t* iterBuffer;
+   TileQueue* queue;
+} WorkerArgs;
+
 void RenderFractal(const RenderConfig *cfg, Fractal *fractal);
 double CartesianXToComplex(Fractal* fractal,  const RenderConfig *cfg, double pixelX);
 double CartesianYToComplex(Fractal* fractal,  const RenderConfig *cfg, double pixelY);
+void* worker(WorkerArgs* args);
 
 #endif // RENDER_H
