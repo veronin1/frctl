@@ -68,8 +68,8 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
       size_t index = y * tilesX + x;
       tiles[index].height = 32;
       tiles[index].width = 32;
-      tiles[index].startX = x;
-      tiles[index].startY = y;
+      tiles[index].startX = x * 32;
+      tiles[index].startY = y * 32;
     }
   }
 
@@ -83,7 +83,7 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
     goto cleanup;
   }
 
-  pthread_mutex_destroy(&tQueue->lock);
+  pthread_t* threads = malloc(sizeof(pthread_t) * (unsigned long)cores);
 
   while (!WindowShouldClose()) {
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
@@ -123,18 +123,20 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
       fractal->minImag = fractalCenterY - fractalHeight / 2.0;
       fractal->maxImag = fractalCenterY + fractalHeight / 2.0;
 
-      switch (fractal->type) {
-        case FRACTAL_MANDELBROT:
-          mandelbrot(fractal, cfg->width, cfg->height, iterBuffer);
-          break;
-        case FRACTAL_JULIA:
-          julia(fractal, cfg->width, cfg->height, iterBuffer);
-          break;
-        case FRACTAL_NEWTON:
-          newton(fractal, cfg->width, cfg->height, iterBuffer);
-          break;
-        default:
-          goto cleanup;
+      for (size_t i = 0; i < (size_t)cores; ++i) {
+        switch (fractal->type) {
+          case FRACTAL_MANDELBROT:
+            mandelbrot(fractal, cfg->width, cfg->height, iterBuffer);
+            break;
+          case FRACTAL_JULIA:
+            julia(fractal, cfg->width, cfg->height, iterBuffer);
+            break;
+          case FRACTAL_NEWTON:
+            newton(fractal, cfg->width, cfg->height, iterBuffer);
+            break;
+          default:
+            goto cleanup;
+        }
       }
 
       normaliseIterations(iterBuffer, length, normalisedValues);
@@ -178,4 +180,30 @@ double CartesianYToComplex(Fractal* fractal, const RenderConfig* cfg,
                            double pixelY) {
   return fractal->minImag + ((double)pixelY / (double)cfg->height) *
                                 (fractal->maxImag - fractal->minImag);
+}
+
+void* worker(WorkerArgs* args) {
+  pthread_mutex_lock(&args->queue->lock);
+  if (args->queue->next < args->queue->count) {
+    Tile tile = args->queue->Tiles[args->queue->next];
+    args->queue->next++;
+
+    switch (args->fractal->type) {
+      case FRACTAL_MANDELBROT:
+        mandelbrot(args->fractal, tile.width, tile.height, args->iterBuffer);
+        break;
+      case FRACTAL_JULIA:
+        julia(args->fractal, tile.width, tile.height, args->iterBuffer);
+        break;
+      case FRACTAL_NEWTON:
+        newton(args->fractal, tile.width, tile.height, args->iterBuffer);
+        break;
+      default:
+        goto cleanup;
+    }
+  }
+
+cleanup:
+  free(args->iterBuffer);
+  return NULL;
 }
