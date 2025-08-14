@@ -183,27 +183,30 @@ double CartesianYToComplex(Fractal* fractal, const RenderConfig* cfg,
 }
 
 void* worker(WorkerArgs* args) {
-  pthread_mutex_lock(&args->queue->lock);
-  if (args->queue->next < args->queue->count) {
+  while (true) {
+    pthread_mutex_lock(&args->queue->lock);
+    if (args->queue->next >= args->queue->count) {
+      pthread_mutex_unlock(&args->queue->lock);
+      break;
+    }
+
     Tile tile = args->queue->Tiles[args->queue->next];
     args->queue->next++;
+    pthread_mutex_unlock(&args->queue->lock);
 
     switch (args->fractal->type) {
       case FRACTAL_MANDELBROT:
-        mandelbrot(args->fractal, tile.width, tile.height, args->iterBuffer);
+        mandelbrot(args->fractal, tile.startX, tile.startY, args->iterBuffer);
         break;
       case FRACTAL_JULIA:
-        julia(args->fractal, tile.width, tile.height, args->iterBuffer);
+        julia(args->fractal, tile.startX, tile.startY, args->iterBuffer);
         break;
       case FRACTAL_NEWTON:
-        newton(args->fractal, tile.width, tile.height, args->iterBuffer);
+        newton(args->fractal, tile.startX, tile.startY, args->iterBuffer);
         break;
       default:
-        goto cleanup;
+        break;
     }
   }
-
-cleanup:
-  free(args->iterBuffer);
   return NULL;
 }
