@@ -79,6 +79,15 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
 
   threads = malloc(sizeof(pthread_t) * (unsigned long)cores);
 
+  WorkerArgs* args = malloc(sizeof(WorkerArgs));
+      args->queue = tQueue;
+      args->fractal = fractal;
+      args->iterBuffer = iterBuffer;
+      tQueue->next = 0;
+      args->imageHeight = (size_t)img.height;
+      args->imageWidth = (size_t)img.width;
+
+  
   while (!WindowShouldClose()) {
 
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
@@ -87,10 +96,12 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
     }
 
     if (selecting) {
+      BeginDrawing();
       currentPos = GetMousePosition();
       DrawRectangleLines((int)clickStart.x, (int)clickStart.y,
                          (int)currentPos.x - (int)clickStart.x,
                          (int)currentPos.y - (int)clickStart.y, PINK);
+      EndDrawing();
     }
 
     if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
@@ -118,14 +129,7 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
       fractal->minImag = fractalCenterY - fractalHeight / 2.0;
       fractal->maxImag = fractalCenterY + fractalHeight / 2.0;
     }
-    
-      WorkerArgs* args = malloc(sizeof(WorkerArgs));
-      args->queue = tQueue;
-      args->fractal = fractal;
-      args->iterBuffer = iterBuffer;
-      tQueue->next = 0;
-      args->imageHeight = (size_t)img.height;
-      args->imageWidth = (size_t)img.width;
+ 
 
       for (size_t i = 0; i < (size_t)cores; ++i) {
         int rc =
@@ -181,14 +185,14 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
 
   UnloadTexture(tex);
   UnloadImage(img);
-
 cleanup:
+if (tQueue) pthread_mutex_destroy(&tQueue->lock);
   free(normalisedValues);
   free(iterBuffer);
   free(tQueue);
   free(tiles);
   free(threads);
-free(args);
+  free(args);
 CloseWindow();
 }
 
