@@ -96,10 +96,10 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
     if (IsKeyPressed(KEY_ONE)) {
       fractal->type = FRACTAL_MANDELBROT;
     }
-    if (IsKeyPresesd(KEY_TWO)) {
+    if (IsKeyPressed(KEY_TWO)) {
       fractal->type = FRACTAL_JULIA;
     }
-    if (IsKeyPresesd(KEY_THREE)) {
+    if (IsKeyPressed(KEY_THREE)) {
       fractal->type = FRACTAL_NEWTON;
     }
 
