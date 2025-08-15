@@ -92,6 +92,17 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   threads = malloc(sizeof(pthread_t) * (unsigned long)cores);
 
   while (!WindowShouldClose()) {
+
+    if (IsKeyPressed(KEY_ONE)) {
+      fractal->type = FRACTAL_MANDELBROT;
+    }
+    if (IsKeyPresesd(KEY_TWO)) {
+      fractal->type = FRACTAL_JULIA;
+    }
+    if (IsKeyPresesd(KEY_THREE)) {
+      fractal->type = FRACTAL_NEWTON;
+    }
+
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
       clickStart = GetMousePosition();
       selecting = true;
