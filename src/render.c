@@ -12,6 +12,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   if (!cfg || !fractal) {
@@ -35,6 +36,7 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
     goto cleanup;
   }
 
+  /*
   switch (fractal->type) {
     case FRACTAL_MANDELBROT:
       mandelbrot(fractal, cfg->width, cfg->height, iterBuffer);
@@ -51,6 +53,11 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
       goto cleanup;
   }
 
+  */
+
+  bool fractalTypeChanged = false;
+  
+  
   normaliseIterations(iterBuffer, length, normalisedValues);
   Vector2 clickStart = {0};
   bool selecting = false;
@@ -93,16 +100,6 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
 
   while (!WindowShouldClose()) {
 
-    if (IsKeyPressed(KEY_ONE)) {
-      fractal->type = FRACTAL_MANDELBROT;
-    }
-    if (IsKeyPressed(KEY_TWO)) {
-      fractal->type = FRACTAL_JULIA;
-    }
-    if (IsKeyPressed(KEY_THREE)) {
-      fractal->type = FRACTAL_NEWTON;
-    }
-
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
       clickStart = GetMousePosition();
       selecting = true;
@@ -139,7 +136,7 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
       fractal->maxReal = fractalCenterX + fractalWidth / 2.0;
       fractal->minImag = fractalCenterY - fractalHeight / 2.0;
       fractal->maxImag = fractalCenterY + fractalHeight / 2.0;
-
+    
       WorkerArgs* args = malloc(sizeof(WorkerArgs));
       args->queue = tQueue;
       args->fractal = fractal;
@@ -180,6 +177,19 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
     ClearBackground(BLACK);
     DrawTexture(tex, 0, 0, WHITE);
     EndDrawing();
+
+    if (IsKeyPressed(KEY_ONE)) {
+      fractal->type = FRACTAL_MANDELBROT;
+      fractalTypeChanged = true;
+    }
+    if (IsKeyPressed(KEY_TWO)) {
+      fractal->type = FRACTAL_JULIA;
+      fractalTypeChanged = true;
+    }
+    if (IsKeyPressed(KEY_THREE)) {
+      fractal->type = FRACTAL_NEWTON;
+      fractalTypeChanged = true;
+    }
   }
 
   UnloadTexture(tex);
@@ -236,4 +246,23 @@ void* worker(WorkerArgs* args) {
     }
   }
   return NULL;
+}
+
+void renderFractal(Fractal* fractal, const RenderConfig* cfg, uint16_t* iterBuffer, float* normalisedValues) {
+ 
+  switch (fractal->type) {
+    case FRACTAL_MANDELBROT:
+      mandelbrot(fractal, cfg->width, cfg->height, iterBuffer);
+      break;
+    case FRACTAL_JULIA:
+      julia(fractal, cfg->width, cfg->height, iterBuffer);
+      break;
+    case FRACTAL_NEWTON:
+      newton(fractal, cfg->width, cfg->height, iterBuffer);
+      break;
+    default:
+      break;
+  }
+
+  normaliseIterations(iterBuffer, cfg->width * cfg->height, normalisedValues);
 }
