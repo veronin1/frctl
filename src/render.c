@@ -117,6 +117,7 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
       fractal->maxReal = fractalCenterX + fractalWidth / 2.0;
       fractal->minImag = fractalCenterY - fractalHeight / 2.0;
       fractal->maxImag = fractalCenterY + fractalHeight / 2.0;
+    }
     
       WorkerArgs* args = malloc(sizeof(WorkerArgs));
       args->queue = tQueue;
@@ -187,7 +188,8 @@ cleanup:
   free(tQueue);
   free(tiles);
   free(threads);
-  CloseWindow();
+free(args);
+CloseWindow();
 }
 
 double CartesianXToComplex(Fractal* fractal, const RenderConfig* cfg,
