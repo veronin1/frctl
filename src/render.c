@@ -9,10 +9,10 @@
 #include <math.h>
 #include <pthread.h>
 #include <raylib.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <stdbool.h>
 
 void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   if (!cfg || !fractal) {
@@ -37,7 +37,7 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   }
 
   bool fractalTypeChanged = false;
-  
+
   renderFractal(fractal, cfg, iterBuffer, normalisedValues);
 
   Vector2 clickStart = {0};
@@ -80,18 +80,16 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   threads = malloc(sizeof(pthread_t) * (unsigned long)cores);
 
   WorkerArgs* args = malloc(sizeof(WorkerArgs));
-      args->queue = tQueue;
-      args->fractal = fractal;
-      args->iterBuffer = iterBuffer;
-      tQueue->next = 0;
-      args->imageHeight = (size_t)img.height;
-      args->imageWidth = (size_t)img.width;
+  args->queue = tQueue;
+  args->fractal = fractal;
+  args->iterBuffer = iterBuffer;
+  tQueue->next = 0;
+  args->imageHeight = (size_t)img.height;
+  args->imageWidth = (size_t)img.width;
 
+  bool needsRedraw = false;
 
-      bool needsRedraw = false;
-  
   while (!WindowShouldClose()) {
-
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
       clickStart = GetMousePosition();
       selecting = true;
@@ -132,9 +130,8 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
       fractal->maxImag = fractalCenterY + fractalHeight / 2.0;
       needsRedraw = true;
     }
- 
+
     if (needsRedraw) {
-    
       for (size_t i = 0; i < (size_t)cores; ++i) {
         int rc =
             pthread_create(&threads[i], NULL, (void* (*)(void*))worker, args);
@@ -151,53 +148,58 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
     }
     needsRedraw = false;
   }
-    if (fractalTypeChanged) {
-      renderFractal(fractal, cfg, iterBuffer, normalisedValues);
-      fractalTypeChanged = false;
-    }
-    
-    for (size_t y = 0; y < cfg->height; ++y) {
-      for (size_t x = 0; x < cfg->width; ++x) {
-        float normalisedValue = normalisedValues[y * cfg->width + x];
-        Color colour;
-
-        if (mapIterationToColor(normalisedValue, &colour) != FRACTAL_SUCCESS) {
-          goto cleanup;
-        }
-        ((Color*)img.data)[y * cfg->width + x] = colour;
-      }
-    }
-    UpdateTexture(tex, img.data);
-
-    BeginDrawing();
-    ClearBackground(BLACK);
-    DrawTexture(tex, 0, 0, WHITE);
-    EndDrawing();
-
-    if (IsKeyPressed(KEY_ONE)) {
-      fractal->type = FRACTAL_MANDELBROT;
-      fractalTypeChanged = true;
-    }
-    if (IsKeyPressed(KEY_TWO)) {
-      fractal->type = FRACTAL_JULIA;
-      fractalTypeChanged = true;
-    }
-    if (IsKeyPressed(KEY_THREE)) {
-      fractal->type = FRACTAL_NEWTON;
-      fractalTypeChanged = true;
-    }
+  if (fractalTypeChanged) {
+    renderFractal(fractal, cfg, iterBuffer, normalisedValues);
+    fractalTypeChanged = false;
   }
 
-  UnloadTexture(tex);
-  UnloadImage(img);
-cleanup:
-if (tQueue) pthread_mutex_destroy(&tQueue->lock);
-if (normalisedValues)  free(normalisedValues);
-if (iterBuffer)  free(iterBuffer);
-if (tQueue)  free(tQueue);
-if (tiles)  free(tiles);
-if (threads)  free(threads);
-if (args) free(args);
+  for (size_t y = 0; y < cfg->height; ++y) {
+    for (size_t x = 0; x < cfg->width; ++x) {
+      float normalisedValue = normalisedValues[y * cfg->width + x];
+      Color colour;
+
+      if (mapIterationToColor(normalisedValue, &colour) != FRACTAL_SUCCESS) {
+        goto cleanup;
+      }
+      ((Color*)img.data)[y * cfg->width + x] = colour;
+    }
+  }
+  UpdateTexture(tex, img.data);
+
+  BeginDrawing();
+  ClearBackground(BLACK);
+  DrawTexture(tex, 0, 0, WHITE);
+  EndDrawing();
+
+  if (IsKeyPressed(KEY_ONE)) {
+    fractal->type = FRACTAL_MANDELBROT;
+    fractalTypeChanged = true;
+  }
+  if (IsKeyPressed(KEY_TWO)) {
+    fractal->type = FRACTAL_JULIA;
+    fractalTypeChanged = true;
+  }
+  if (IsKeyPressed(KEY_THREE)) {
+    fractal->type = FRACTAL_NEWTON;
+    fractalTypeChanged = true;
+  }
+}
+
+UnloadTexture(tex);
+UnloadImage(img);
+cleanup : if (tQueue) pthread_mutex_destroy(&tQueue->lock);
+if (normalisedValues)
+  free(normalisedValues);
+if (iterBuffer)
+  free(iterBuffer);
+if (tQueue)
+  free(tQueue);
+if (tiles)
+  free(tiles);
+if (threads)
+  free(threads);
+if (args)
+  free(args);
 CloseWindow();
 }
 
@@ -245,8 +247,8 @@ void* worker(WorkerArgs* args) {
   return NULL;
 }
 
-void renderFractal(Fractal* fractal, const RenderConfig* cfg, uint16_t* iterBuffer, float* normalisedValues) {
- 
+void renderFractal(Fractal* fractal, const RenderConfig* cfg,
+                   uint16_t* iterBuffer, float* normalisedValues) {
   switch (fractal->type) {
     case FRACTAL_MANDELBROT:
       mandelbrot(fractal, cfg->width, cfg->height, iterBuffer);
