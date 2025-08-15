@@ -96,12 +96,10 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
     }
 
     if (selecting) {
-      BeginDrawing();
       currentPos = GetMousePosition();
       DrawRectangleLines((int)clickStart.x, (int)clickStart.y,
                          (int)currentPos.x - (int)clickStart.x,
                          (int)currentPos.y - (int)clickStart.y, PINK);
-      EndDrawing();
     }
 
     if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
@@ -145,62 +143,65 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
       }
 
       normaliseIterations(iterBuffer, length, normalisedValues);
+
+      needsRedraw = false;
     }
-    needsRedraw = false;
-  }
-  if (fractalTypeChanged) {
-    renderFractal(fractal, cfg, iterBuffer, normalisedValues);
-    fractalTypeChanged = false;
-  }
 
-  for (size_t y = 0; y < cfg->height; ++y) {
-    for (size_t x = 0; x < cfg->width; ++x) {
-      float normalisedValue = normalisedValues[y * cfg->width + x];
-      Color colour;
+    if (fractalTypeChanged) {
+      renderFractal(fractal, cfg, iterBuffer, normalisedValues);
+      fractalTypeChanged = false;
+    }
 
-      if (mapIterationToColor(normalisedValue, &colour) != FRACTAL_SUCCESS) {
-        goto cleanup;
+    for (size_t y = 0; y < cfg->height; ++y) {
+      for (size_t x = 0; x < cfg->width; ++x) {
+        float normalisedValue = normalisedValues[y * cfg->width + x];
+        Color colour;
+
+        if (mapIterationToColor(normalisedValue, &colour) != FRACTAL_SUCCESS) {
+          goto cleanup;
+        }
+        ((Color*)img.data)[y * cfg->width + x] = colour;
       }
-      ((Color*)img.data)[y * cfg->width + x] = colour;
+    }
+    UpdateTexture(tex, img.data);
+
+    BeginDrawing();
+    ClearBackground(BLACK);
+    DrawTexture(tex, 0, 0, WHITE);
+    EndDrawing();
+
+    if (IsKeyPressed(KEY_ONE)) {
+      fractal->type = FRACTAL_MANDELBROT;
+      fractalTypeChanged = true;
+    }
+    if (IsKeyPressed(KEY_TWO)) {
+      fractal->type = FRACTAL_JULIA;
+      fractalTypeChanged = true;
+    }
+    if (IsKeyPressed(KEY_THREE)) {
+      fractal->type = FRACTAL_NEWTON;
+      fractalTypeChanged = true;
     }
   }
-  UpdateTexture(tex, img.data);
 
-  BeginDrawing();
-  ClearBackground(BLACK);
-  DrawTexture(tex, 0, 0, WHITE);
-  EndDrawing();
-
-  if (IsKeyPressed(KEY_ONE)) {
-    fractal->type = FRACTAL_MANDELBROT;
-    fractalTypeChanged = true;
-  }
-  if (IsKeyPressed(KEY_TWO)) {
-    fractal->type = FRACTAL_JULIA;
-    fractalTypeChanged = true;
-  }
-  if (IsKeyPressed(KEY_THREE)) {
-    fractal->type = FRACTAL_NEWTON;
-    fractalTypeChanged = true;
-  }
-}
-
-UnloadTexture(tex);
-UnloadImage(img);
-cleanup : if (tQueue) pthread_mutex_destroy(&tQueue->lock);
-if (normalisedValues)
-  free(normalisedValues);
-if (iterBuffer)
-  free(iterBuffer);
-if (tQueue)
-  free(tQueue);
-if (tiles)
-  free(tiles);
-if (threads)
-  free(threads);
-if (args)
-  free(args);
-CloseWindow();
+  UnloadTexture(tex);
+  UnloadImage(img);
+cleanup:
+  if (tQueue)
+    pthread_mutex_destroy(&tQueue->lock);
+  if (normalisedValues)
+    free(normalisedValues);
+  if (iterBuffer)
+    free(iterBuffer);
+  if (tQueue)
+    free(tQueue);
+  if (tiles)
+    free(tiles);
+  if (threads)
+    free(threads);
+  if (args)
+    free(args);
+  CloseWindow();
 }
 
 double CartesianXToComplex(Fractal* fractal, const RenderConfig* cfg,
