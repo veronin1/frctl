@@ -57,8 +57,8 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
 
   bool fractalTypeChanged = false;
   
-  
-  normaliseIterations(iterBuffer, length, normalisedValues);
+  renderFractal(fractal, cfg, iterBuffer, normalisedValues);
+
   Vector2 clickStart = {0};
   bool selecting = false;
   Vector2 currentPos = {0};
@@ -160,6 +160,11 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
       normaliseIterations(iterBuffer, length, normalisedValues);
     }
 
+    if (fractalTypeChanged) {
+      renderFractal(fractal, cfg, iterBuffer, normalisedValues);
+      fractalTypeChanged = false;
+    }
+    
     for (size_t y = 0; y < cfg->height; ++y) {
       for (size_t x = 0; x < cfg->width; ++x) {
         float normalisedValue = normalisedValues[y * cfg->width + x];
