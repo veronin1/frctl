@@ -38,6 +38,7 @@ void RenderFractal(const RenderConfig *cfg, Fractal *fractal);
 double CartesianXToComplex(Fractal* fractal,  const RenderConfig *cfg, double pixelX);
 double CartesianYToComplex(Fractal* fractal,  const RenderConfig *cfg, double pixelY);
 void* worker(WorkerArgs* args);
+void renderFractal(Fractal* fractal, const RenderConfig* cfg, uint16_t* iterBuffer, float* normalisedValues);
 
 
 #endif // RENDER_H
