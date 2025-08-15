@@ -87,6 +87,8 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
       args->imageHeight = (size_t)img.height;
       args->imageWidth = (size_t)img.width;
 
+
+      bool needsRedraw = false;
   
   while (!WindowShouldClose()) {
 
@@ -128,9 +130,11 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
       fractal->maxReal = fractalCenterX + fractalWidth / 2.0;
       fractal->minImag = fractalCenterY - fractalHeight / 2.0;
       fractal->maxImag = fractalCenterY + fractalHeight / 2.0;
+      needsRedraw = true;
     }
  
-
+    if (needsRedraw) {
+    
       for (size_t i = 0; i < (size_t)cores; ++i) {
         int rc =
             pthread_create(&threads[i], NULL, (void* (*)(void*))worker, args);
@@ -145,7 +149,8 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
 
       normaliseIterations(iterBuffer, length, normalisedValues);
     }
-
+    needsRedraw = false;
+  }
     if (fractalTypeChanged) {
       renderFractal(fractal, cfg, iterBuffer, normalisedValues);
       fractalTypeChanged = false;
@@ -187,12 +192,12 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   UnloadImage(img);
 cleanup:
 if (tQueue) pthread_mutex_destroy(&tQueue->lock);
-  free(normalisedValues);
-  free(iterBuffer);
-  free(tQueue);
-  free(tiles);
-  free(threads);
-  free(args);
+if (normalisedValues)  free(normalisedValues);
+if (iterBuffer)  free(iterBuffer);
+if (tQueue)  free(tQueue);
+if (tiles)  free(tiles);
+if (threads)  free(threads);
+if (args) free(args);
 CloseWindow();
 }
 
