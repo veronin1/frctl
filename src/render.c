@@ -29,7 +29,8 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   Tile* tiles = NULL;
   TileQueue* tQueue = NULL;
   pthread_t* threads = NULL;
-
+  WorkerArgs* args = NULL;
+  
   normalisedValues = malloc(length * sizeof(float));
   iterBuffer = calloc(cfg->width * cfg->height, sizeof(uint16_t));
   if (!normalisedValues || !iterBuffer) {
@@ -79,7 +80,7 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
 
   threads = malloc(sizeof(pthread_t) * (unsigned long)cores);
 
-  WorkerArgs* args = malloc(sizeof(WorkerArgs));
+  args = malloc(sizeof(WorkerArgs));
   args->queue = tQueue;
   args->fractal = fractal;
   args->iterBuffer = iterBuffer;
