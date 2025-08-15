@@ -36,25 +36,6 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
     goto cleanup;
   }
 
-  /*
-  switch (fractal->type) {
-    case FRACTAL_MANDELBROT:
-      mandelbrot(fractal, cfg->width, cfg->height, iterBuffer);
-      break;
-    case FRACTAL_JULIA:
-      julia(fractal, cfg->width, cfg->height, iterBuffer);
-      break;
-    case FRACTAL_NEWTON:
-      newton(fractal, cfg->width, cfg->height, iterBuffer);
-      break;
-    case FRACTAL_BURNINGSHIP:
-      goto cleanup;
-    default:
-      goto cleanup;
-  }
-
-  */
-
   bool fractalTypeChanged = false;
   
   renderFractal(fractal, cfg, iterBuffer, normalisedValues);
