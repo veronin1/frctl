@@ -145,43 +145,36 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
           goto cleanup;
         }
       }
-
       for (size_t i = 0; i < (size_t)cores; ++i) {
         pthread_join(threads[i], NULL);
       }
 
       normaliseIterations(iterBuffer, length, normalisedValues);
 
-      needsRedraw = false;
-    }
+      for (size_t y = 0; y < cfg->height; ++y) {
+        for (size_t x = 0; x < cfg->width; ++x) {
+          float normalisedValue = normalisedValues[y * cfg->width + x];
+          Color colour;
 
-    if (fractalTypeChanged) {
-      renderFractal(fractal, cfg, iterBuffer, normalisedValues);
-      fractalTypeChanged = false;
-    }
-
-    for (size_t y = 0; y < cfg->height; ++y) {
-      for (size_t x = 0; x < cfg->width; ++x) {
-        float normalisedValue = normalisedValues[y * cfg->width + x];
-        Color colour;
-
-        if (mapIterationToColor(normalisedValue, &colour) != FRACTAL_SUCCESS) {
-          goto cleanup;
+          if (mapIterationToColor(normalisedValue, &colour) !=
+              FRACTAL_SUCCESS) {
+            goto cleanup;
+          }
+          ((Color*)img.data)[y * cfg->width + x] = colour;
         }
-        ((Color*)img.data)[y * cfg->width + x] = colour;
+        UpdateTexture(tex, img.data);
+        needsRedraw = false;
       }
     }
-    UpdateTexture(tex, img.data);
 
     BeginDrawing();
     ClearBackground(BLACK);
     DrawTexture(tex, 0, 0, WHITE);
     EndDrawing();
   }
-
+cleanup:
   UnloadTexture(tex);
   UnloadImage(img);
-cleanup:
   if (tQueue)
     pthread_mutex_destroy(&tQueue->lock);
   if (normalisedValues)
