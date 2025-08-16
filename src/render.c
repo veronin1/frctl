@@ -180,9 +180,9 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
           }
           ((Color*)img.data)[y * cfg->width + x] = colour;
         }
-        UpdateTexture(tex, img.data);
-        needsRedraw = false;
       }
+      UpdateTexture(tex, img.data);
+      needsRedraw = false;
     }
 
     BeginDrawing();
