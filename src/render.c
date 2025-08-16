@@ -48,7 +48,7 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   size_t totalTiles = tilesX * tilesY;
 
   tiles = malloc((unsigned long)totalTiles * sizeof(Tile));
-  tQueue = malloc(sizeof(TileQueue));
+  tQueue = calloc(1, sizeof(TileQueue));
   if (!tiles || !tQueue) {
     goto cleanup;
   }
