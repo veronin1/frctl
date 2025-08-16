@@ -10,6 +10,14 @@ frctl is a fractal visualiser written in C using raylib, supporting Mandelbrot, 
 
 ---
 
+# Keybinds
+
+- `1`: mandelbrot
+- `2`: julia
+- `3`: newton
+- `hold lmb`: drag in an area to zoom in
+---
+
 # Compilation & Running
 
 > **Requirements:**
