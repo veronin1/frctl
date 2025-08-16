@@ -31,6 +31,8 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   TileQueue* tQueue = NULL;
   pthread_t* threads = NULL;
   WorkerArgs* args = NULL;
+  Image img = {0};
+  Texture2D tex = {0};
 
   normalisedValues = malloc(length * sizeof(float));
   iterBuffer = calloc(cfg->width * cfg->height, sizeof(uint16_t));
@@ -38,8 +40,8 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
     goto cleanup;
   }
 
-  Image img = GenImageColor((int)cfg->width, (int)cfg->height, BLACK);
-  Texture2D tex = LoadTextureFromImage(img);
+  img = GenImageColor((int)cfg->width, (int)cfg->height, BLACK);
+  tex = LoadTextureFromImage(img);
 
   size_t tilesX = (cfg->width + 31) / 32;
   size_t tilesY = (cfg->height + 31) / 32;
