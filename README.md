@@ -6,7 +6,7 @@ frctl is a fractal visualiser written in C using raylib, supporting Mandelbrot, 
 
 # Demo
 
-> n/a
+![Demo GIF](demo/demo3.gif)
 
 ---
 
