@@ -193,7 +193,7 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
 cleanup:
   UnloadTexture(tex);
   UnloadImage(img);
-  if (tQueue)
+  if (tQueue && tQueue->Tiles)
     pthread_mutex_destroy(&tQueue->lock);
   if (normalisedValues)
     free(normalisedValues);
