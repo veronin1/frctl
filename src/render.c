@@ -78,8 +78,8 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   args->fractal = fractal;
   args->iterBuffer = iterBuffer;
   tQueue->next = 0;
-  args->imageHeight = cfg->width;
-  args->imageWidth = cfg->height;
+  args->imageHeight = cfg->height;
+  args->imageWidth = cfg->width;
 
   Vector2 clickStart = {0}, currentPos = {0};
   bool selecting = false;
