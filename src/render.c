@@ -12,6 +12,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
@@ -30,20 +31,12 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   TileQueue* tQueue = NULL;
   pthread_t* threads = NULL;
   WorkerArgs* args = NULL;
-  
+
   normalisedValues = malloc(length * sizeof(float));
   iterBuffer = calloc(cfg->width * cfg->height, sizeof(uint16_t));
   if (!normalisedValues || !iterBuffer) {
     goto cleanup;
   }
-
-  bool fractalTypeChanged = false;
-
-  renderFractal(fractal, cfg, iterBuffer, normalisedValues);
-
-  Vector2 clickStart = {0};
-  bool selecting = false;
-  Vector2 currentPos = {0};
 
   Image img = GenImageColor((int)cfg->width, (int)cfg->height, BLACK);
   Texture2D tex = LoadTextureFromImage(img);
@@ -77,18 +70,18 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   if (cores <= 0) {
     cores = 1;
   }
-
   threads = malloc(sizeof(pthread_t) * (unsigned long)cores);
-
   args = malloc(sizeof(WorkerArgs));
   args->queue = tQueue;
   args->fractal = fractal;
   args->iterBuffer = iterBuffer;
   tQueue->next = 0;
-  args->imageHeight = (size_t)img.height;
-  args->imageWidth = (size_t)img.width;
+  args->imageHeight = cfg->width;
+  args->imageWidth = cfg->height;
 
-  bool needsRedraw = false;
+  Vector2 clickStart = {0}, currentPos = {0};
+  bool selecting = false;
+  bool needsRedraw = true;
 
   while (!WindowShouldClose()) {
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
@@ -127,6 +120,20 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
       fractal->maxReal = fractalCenterX + fractalWidth / 2.0;
       fractal->minImag = fractalCenterY - fractalHeight / 2.0;
       fractal->maxImag = fractalCenterY + fractalHeight / 2.0;
+
+      needsRedraw = true;
+    }
+
+    if (IsKeyPressed(KEY_ONE)) {
+      fractal->type = FRACTAL_MANDELBROT;
+      needsRedraw = true;
+    }
+    if (IsKeyPressed(KEY_TWO)) {
+      fractal->type = FRACTAL_JULIA;
+      needsRedraw = true;
+    }
+    if (IsKeyPressed(KEY_THREE)) {
+      fractal->type = FRACTAL_NEWTON;
       needsRedraw = true;
     }
 
@@ -170,19 +177,6 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
     ClearBackground(BLACK);
     DrawTexture(tex, 0, 0, WHITE);
     EndDrawing();
-
-    if (IsKeyPressed(KEY_ONE)) {
-      fractal->type = FRACTAL_MANDELBROT;
-      fractalTypeChanged = true;
-    }
-    if (IsKeyPressed(KEY_TWO)) {
-      fractal->type = FRACTAL_JULIA;
-      fractalTypeChanged = true;
-    }
-    if (IsKeyPressed(KEY_THREE)) {
-      fractal->type = FRACTAL_NEWTON;
-      fractalTypeChanged = true;
-    }
   }
 
   UnloadTexture(tex);
