@@ -3,31 +3,6 @@
 #include "fractal.h"
 #include "render.h"
 
-/* MANDELBROT
-  fractal->type = FRACTAL_MANDELBROT;
-  fractal->minReal = -2.0;
-  fractal->maxReal = 1.0;
-  fractal->minImag = -1.5;
-  fractal->maxImag = 1.5;
-  fractal->maxIter = 1000;
-
-  JULIA
-  fractal->type = FRACTAL_JULIA;
-  fractal->minReal = -1.5;
-  fractal->maxReal = 1.5;
-  fractal->minImag = -1.5;
-  fractal->maxImag = 1.5;
-  fractal->maxIter = 100;
-
-  NEWTON
-  fractal->type = FRACTAL_NEWTON;
-  fractal->minReal = -2.0;
-  fractal->maxReal = 2.0;
-  fractal->minImag = -2.0;
-  fractal->maxImag = 2.0;
-  fractal->maxIter = 1000;
- */
-
 int main(void) {
   Fractal* fractal = malloc(sizeof(Fractal));
   if (!fractal) {
