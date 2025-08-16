@@ -56,8 +56,8 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
   for (size_t y = 0; y < tilesY; ++y) {
     for (size_t x = 0; x < tilesX; ++x) {
       size_t index = y * tilesX + x;
-      tiles[index].height = 32;
-      tiles[index].width = 32;
+      tiles[index].height = (x == tilesX - 1) ? (cfg->width - x * 32) : 32;
+      tiles[index].width = (y == tilesY - 1) ? (cfg->height - y * 32) : 32;
       tiles[index].startX = x * 32;
       tiles[index].startY = y * 32;
     }
