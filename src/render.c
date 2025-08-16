@@ -128,14 +128,29 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
 
     if (IsKeyPressed(KEY_ONE)) {
       fractal->type = FRACTAL_MANDELBROT;
+      fractal->minReal = -2.0;
+      fractal->maxReal = 1.0;
+      fractal->minImag = -1.5;
+      fractal->maxImag = 1.5;
+      fractal->maxIter = 1000;
       needsRedraw = true;
     }
     if (IsKeyPressed(KEY_TWO)) {
       fractal->type = FRACTAL_JULIA;
+      fractal->minReal = -1.5;
+      fractal->maxReal = 1.5;
+      fractal->minImag = -1.5;
+      fractal->maxImag = 1.5;
+      fractal->maxIter = 1000;
       needsRedraw = true;
     }
     if (IsKeyPressed(KEY_THREE)) {
       fractal->type = FRACTAL_NEWTON;
+      fractal->minReal = -2.0;
+      fractal->maxReal = 2.0;
+      fractal->minImag = -2.0;
+      fractal->maxImag = 2.0;
+      fractal->maxIter = 1000;
       needsRedraw = true;
     }
 
