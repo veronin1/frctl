@@ -138,6 +138,7 @@ void RenderFractal(const RenderConfig* cfg, Fractal* fractal) {
     }
 
     if (needsRedraw) {
+      tQueue->next = 0;
       for (size_t i = 0; i < (size_t)cores; ++i) {
         int rc =
             pthread_create(&threads[i], NULL, (void* (*)(void*))worker, args);
@@ -234,23 +235,4 @@ void* worker(WorkerArgs* args) {
     }
   }
   return NULL;
-}
-
-void renderFractal(Fractal* fractal, const RenderConfig* cfg,
-                   uint16_t* iterBuffer, float* normalisedValues) {
-  switch (fractal->type) {
-    case FRACTAL_MANDELBROT:
-      mandelbrot(fractal, cfg->width, cfg->height, iterBuffer);
-      break;
-    case FRACTAL_JULIA:
-      julia(fractal, cfg->width, cfg->height, iterBuffer);
-      break;
-    case FRACTAL_NEWTON:
-      newton(fractal, cfg->width, cfg->height, iterBuffer);
-      break;
-    default:
-      break;
-  }
-
-  normaliseIterations(iterBuffer, cfg->width * cfg->height, normalisedValues);
 }
